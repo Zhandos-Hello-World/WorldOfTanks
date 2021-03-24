@@ -4,7 +4,7 @@ public class MyPlayer implements  Player{
 
     @Override
     public void setMap(Map map) {
-
+        
     }
 
     @Override
@@ -28,7 +28,7 @@ public class MyPlayer implements  Player{
     }
 
     @Override
-    public Position getPostition() {
+    public Position getPosition() {
         return null;
     }
 }

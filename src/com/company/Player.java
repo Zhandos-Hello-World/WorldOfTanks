@@ -6,5 +6,5 @@ public interface Player {
     void moveLeft();
     void moveUp();
     void moveDown();
-    Position getPostition();
+    Position getPosition();
 }

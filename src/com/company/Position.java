@@ -1,6 +1,5 @@
 package com.company;
 
-import java.util.Objects;
 
 public class Position{
     private int x, y;
@@ -42,8 +41,4 @@ public class Position{
                 '}';
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(x, y);
-    }
 }
