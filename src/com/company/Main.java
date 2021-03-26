@@ -27,9 +27,7 @@ public class Main {
                 System.out.println(size);
                 System.out.println(map.getValueAt(size/2, size/2));
             }
-            catch(Exception e){
-
-            }
+            catch(Exception e){}
         }
 
         // Checking the Player interface and the MyPlayer class
@@ -96,7 +94,5 @@ public class Main {
         }
     }
 }
-
-
 
 

@@ -1,6 +1,5 @@
 package com.company;
 
-
 import java.util.Scanner;
 
 public class Map{
@@ -9,10 +8,13 @@ public class Map{
     Map(Scanner scanner) throws InvalidMapException{
         this.N = scanner.nextInt();
         NxN = new char[N][N];
-        for(int x = 0; x < getSize(); x++){
-            for(int y = 0; y < getSize(); y++){
-                NxN[x][y] = scanner.next().charAt(0);
-                if(NxN[x][y] != '1' || NxN[x][y] != '0' || NxN[x][y] != 'P'){
+        for(int y = 0; y < getSize(); y++){
+            for(int x = 0; x < getSize(); x++){
+                char check = scanner.next().charAt(0);
+                if(check == '1' || check == '0' || check == 'P'){
+                    NxN[y][x] = check;
+                }
+                else{
                     throw new InvalidMapException();
                 }
             }
@@ -21,20 +23,17 @@ public class Map{
     int getSize(){
         return this.N;
     }
-    char getValue(int x, int y) throws InvalidMapException{
-        if(x >= N || y >= N){
+
+    public char getValueAt(int y, int x) throws InvalidMapException{
+        if(x >= NxN.length || y >= NxN.length){
             throw new InvalidMapException();
         }
-        return this.NxN[x][y];
-    }
-
-    public char getValueAt(int x, int y){
-        return NxN[x][y];
+        return NxN[y][x];
     }
     public void print(){
-        for(int i = 0; i < NxN.length; i++){
-            for(int j = 0; j < NxN[i].length; j++){
-                System.out.print(NxN[i][j]);
+        for (char[] chars : NxN) {
+            for (char aChar : chars) {
+                System.out.print(aChar + " ");
             }
             System.out.println();
         }

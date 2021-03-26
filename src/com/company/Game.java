@@ -1,10 +1,8 @@
 package com.company;
-
 public class Game{
     private Map map;
-    private Player player;
 
-    public Game(Map map) throws InvalidMapException{
+    public Game(Map map){
         this.map = map;
     }
 
@@ -12,6 +10,7 @@ public class Game{
         this.map = map;
     }
     public void addPlayer(Player player){
-        this.player = player;
+        player.setMap(map);
     }
 }
+
