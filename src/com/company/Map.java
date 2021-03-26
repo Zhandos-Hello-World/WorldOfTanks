@@ -6,12 +6,15 @@ import java.util.Scanner;
 public class Map{
     private int N;
     private char [][]NxN;
-    Map(Scanner scanner){
+    Map(Scanner scanner) throws InvalidMapException{
         this.N = scanner.nextInt();
         NxN = new char[N][N];
         for(int x = 0; x < getSize(); x++){
             for(int y = 0; y < getSize(); y++){
                 NxN[x][y] = scanner.next().charAt(0);
+                if(NxN[x][y] != '1' || NxN[x][y] != '0' || NxN[x][y] != 'P'){
+                    throw new InvalidMapException();
+                }
             }
         }
     }
