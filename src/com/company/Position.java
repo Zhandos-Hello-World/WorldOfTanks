@@ -24,21 +24,13 @@ public class Position{
         return y;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Position position = (Position) o;
-        return x == position.x &&
-                y == position.y;
+    public boolean equals(Position position) {
+        return this.x == position.getX() && this.y == position.getY();
     }
 
     @Override
     public String toString() {
-        return "Position{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+        return "(" + getX() + "," + getY() + ")";
     }
 
 }

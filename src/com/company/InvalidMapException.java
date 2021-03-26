@@ -5,6 +5,10 @@ public class InvalidMapException extends Exception{
     InvalidMapException(){
         message = "Not enough map elements";
     }
+
+    InvalidMapException(String message){
+        this.message = message;
+    }
     @Override
     public String getMessage() {
         return message;

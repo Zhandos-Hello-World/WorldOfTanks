@@ -1,15 +1,15 @@
 package com.company;
 
 public class MyPlayer implements  Player{
+    private Map map;
 
     @Override
     public void setMap(Map map) {
-        
+        this.map = map;
     }
 
     @Override
     public void moveRight() {
-
     }
 
     @Override
