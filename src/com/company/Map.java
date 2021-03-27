@@ -23,9 +23,9 @@ public class Map{
                 }
             }
         }
-        //here p is absent
-        if(!checkPosition){
-            throw new InvalidMapException("Hello p. How are you? Where are you?");
+        //here p is absent or size of the Matrix equals 0
+        if(!checkPosition || N == 0){
+            throw new InvalidMapException("Map size can not be zero");
         }
 
     }
