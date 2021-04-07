@@ -3,6 +3,7 @@ package com.company;
 import com.company.GUI.Barier.Barrier;
 import com.company.GUI.Bullet.Bullet;
 import com.company.GUI.Tanks.*;
+import com.company.GUI.mainScreen.mainScreen;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -19,6 +20,8 @@ public class Main extends Application{
     }
     @Override
     public void start(Stage primaryStage)  {
+        mainScreen m = new mainScreen();
+        m.start();
         Tank[] tanks = {new WhiteTank(), new RedTank(), new YellowTank(), new GreenTank()};
         Bullet bullet = new Bullet();
         Barrier barrier = new Barrier();
