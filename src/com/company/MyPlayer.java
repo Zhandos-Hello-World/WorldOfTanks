@@ -1,6 +1,6 @@
 package com.company;
 
-public class MyPlayer implements  Player{
+public class MyPlayer implements Player{
     private Map map;
     private char[][]NxN;
     private int x = 0;

@@ -1,26 +1,27 @@
 package com.company.GUI.Tanks;
 
+import com.company.GUI.Settings;
+import com.company.MyPlayer;
 import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
-abstract public class Tank{
+abstract public class Tank implements Settings {
     protected Color mirrorColor = new Color(0,0,0, 1);
     protected Color originalColor = new Color(0,0,0, 1);
     protected Color shadowColor = new Color(0,0,0, 1);
     protected CustomRectangle mirror;
     protected CustomRectangle original;
     protected CustomRectangle shadow;
-    protected int pixel = 3;
-    protected CustomRectangle black = new CustomRectangle(new Color(0,0,0,1), pixel);
+    protected CustomRectangle black = new CustomRectangle(new Color(0,0,0,1), getPixel());
     public GridPane caterpillarLeft(){
         GridPane caterpillarLeft = new GridPane();
         caterpillarLeft.setStyle("-fx-background-color: black; -fx-color-label-visible: true");
 
         caterpillarLeft.setPadding(new Insets(0,0,0,0));
 
-        CustomRectangle black = new CustomRectangle(new Color(0,0,0,1), pixel);
+        CustomRectangle black = new CustomRectangle(new Color(0,0,0,1), getPixel());
         for(int i = 0; i <= 1; i++){
             for(int j = 0; j < 3; j++){
                 caterpillarLeft.add(black.get(), j, i);
@@ -194,7 +195,5 @@ abstract public class Tank{
         return hbox;
     }
 
-    public int getPixel() {
-        return pixel;
-    }
+
 }
