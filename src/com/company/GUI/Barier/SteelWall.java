@@ -13,11 +13,10 @@ public class SteelWall extends Barrier{
     @Override
     public GridPane getBarrier() {
         GridPane gridPane1 = new GridPane();
-
-
-
-
-
         return gridPane1;
+    }
+    @Override
+    public boolean ableToDestroyed(){
+        return false;
     }
 }

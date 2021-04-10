@@ -7,7 +7,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
-abstract public class Tank implements Settings {
+abstract public class Tank extends MyPlayer implements Settings {
     protected Color mirrorColor = new Color(0,0,0, 1);
     protected Color originalColor = new Color(0,0,0, 1);
     protected Color shadowColor = new Color(0,0,0, 1);
@@ -17,17 +17,12 @@ abstract public class Tank implements Settings {
     protected CustomRectangle black = new CustomRectangle(new Color(0,0,0,1), getPixel());
     public GridPane caterpillarLeft(){
         GridPane caterpillarLeft = new GridPane();
-        caterpillarLeft.setStyle("-fx-background-color: black; -fx-color-label-visible: true");
-
-        caterpillarLeft.setPadding(new Insets(0,0,0,0));
-
-        CustomRectangle black = new CustomRectangle(new Color(0,0,0,1), getPixel());
+        caterpillarLeft.setStyle("-fx-background-color: black");
         for(int i = 0; i <= 1; i++){
             for(int j = 0; j < 3; j++){
                 caterpillarLeft.add(black.get(), j, i);
             }
         }
-
         caterpillarLeft.add(mirror.get(), 0, 2);
         caterpillarLeft.add(original.get(), 1,2);
         caterpillarLeft.add(original.get(), 2,2);
@@ -194,6 +189,8 @@ abstract public class Tank implements Settings {
         hbox.getChildren().addAll(caterpillarLeft(), town(), caterpillarRight());
         return hbox;
     }
+
+
 
 
 }

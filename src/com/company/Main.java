@@ -1,13 +1,8 @@
 package com.company;
-import com.company.GUI.Barier.Barrier;
-import com.company.GUI.Barier.BrickWall;
-import com.company.GUI.Barier.SteelWall;
-import com.company.GUI.Bullet.Bullet;
 import com.company.GUI.Tanks.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import java.util.Scanner;
 public class Main extends Application{
@@ -15,30 +10,23 @@ public class Main extends Application{
         launch(args);
     }
     @Override
-    public void start(Stage primaryStage)  {
-        Tank[] tanks = {new WhiteTank(), new RedTank(), new YellowTank(), new GreenTank()};
-        Bullet bullet = new Bullet();
-        Barrier barrier = new BrickWall();
-        Barrier barrier1 = new SteelWall();
-        HBox hBox = new HBox();
-        hBox.setSpacing(20);
-        hBox.setStyle("-fx-background-color: black");
-        for(int i = 0; i < tanks.length; i++){
-            hBox.getChildren().add(tanks[i].initializeOnTank());
-        }
-        hBox.getChildren().add(bullet.initializeOnBullet());
-        hBox.getChildren().add(barrier.getBarrier());
-        hBox.getChildren().add(barrier1.getBarrier());
-        primaryStage.setScene(new Scene(hBox));
+    public void start(Stage primaryStage) throws InvalidMapException {
+        Scanner input = new Scanner(System.in);
+        GridPane gp = new GridPane();
+        Map map = new Map(input, gp);
+        Game game = new Game(map);
+        Player p = new RedTank();
+        game.addPlayer(p);
+        primaryStage.setScene(new Scene(map.getMapUI()));
         primaryStage.show();
     }
     public static void logic(){
         GridPane mapUI = null;
         Scanner input = new Scanner(System.in);
-        Player player = new MyPlayer();
+        Player player = new RedTank();
         Game game = null;
         try{
-            game = new Game(new Map(input));
+            game = new Game(new Map(input, new GridPane()));
         }
         catch(InvalidMapException e){
             System.out.println(e.getMessage());

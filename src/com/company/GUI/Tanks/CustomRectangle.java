@@ -1,9 +1,11 @@
 package com.company.GUI.Tanks;
 
+import com.company.GUI.Settings;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class CustomRectangle{
+public class CustomRectangle implements Settings {
     private Rectangle[]rectangles = new Rectangle[20];
     private int index;
     private Color color;
