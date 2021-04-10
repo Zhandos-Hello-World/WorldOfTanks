@@ -17,8 +17,19 @@ public class Main extends Application{
         Game game = new Game(map);
         Player p = new RedTank();
         game.addPlayer(p);
-        primaryStage.setScene(new Scene(map.getMapUI()));
+        Scene scene = new Scene(map.getMapUI());
+        primaryStage.setScene(scene);
         primaryStage.show();
+        scene.setOnKeyPressed(E ->{
+            switch (E.getCode()){
+                case RIGHT:p.moveRight();break;
+                case LEFT:p.moveLeft();break;
+                case DOWN:p.moveDown();break;
+                case UP:p.moveUp();break;
+                case ESCAPE: primaryStage.close();break;
+            }
+            System.out.print(E.getCode());
+        });
     }
     public static void logic(){
         GridPane mapUI = null;

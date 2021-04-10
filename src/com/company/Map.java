@@ -26,6 +26,7 @@ public class Map implements Settings {
         Barrier barrier = new Trees();
         Barrier barrier1 = new Null();
         MyPlayer tank = new RedTank();
+
         boolean checkPosition = false;
         this.N = scanner.nextInt();
         NxN = new char[N][N];
