@@ -1,31 +1,24 @@
 package com.company;
 
-import com.company.GUI.Barier.Barrier;
-import com.company.GUI.Barier.BrickWall;
-import com.company.GUI.Barier.Null;
-import com.company.GUI.Barier.Trees;
+import com.company.GUI.Barier.*;
 import com.company.GUI.Settings;
-import com.company.GUI.Tanks.CustomRectangle;
 import com.company.GUI.Tanks.RedTank;
-import com.company.GUI.Tanks.Tank;
-import com.company.GUI.Tanks.GreenTank;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 import java.util.Scanner;
 
 public class Map implements Settings {
     private int N;
     private char [][]NxN;
-    private Tank userTank;
+
     private static GridPane mapUI;
+    private int[] currentPlaceOfTank = new int[2];
+    private Barrier barrier1 = new Null();
+    private static MyPlayer tank = new RedTank();
     Map(Scanner scanner, GridPane mapUI) throws InvalidMapException{
         setMapUI(mapUI);
         mapUI.setStyle("-fx-background-color: black");
-        Barrier barrier = new Trees();
-        Barrier barrier1 = new Null();
-        MyPlayer tank = new RedTank();
+        Barrier barrier = new BrickWall();
 
         boolean checkPosition = false;
         this.N = scanner.nextInt();
@@ -37,6 +30,8 @@ public class Map implements Settings {
                     if(check == 'P'){
                         checkPosition = true;
                         mapUI.add(tank.initializeOnTank(), x, y);
+                        currentPlaceOfTank[0] = y;
+                        currentPlaceOfTank[1] = x;
                     }
                     else if(check == '1'){
                         mapUI.add(barrier.getBarrier(), x, y);
@@ -55,9 +50,6 @@ public class Map implements Settings {
         if(!checkPosition || N == 0){
             throw new InvalidMapException("Map size can not be zero");
         }
-        else{
-            userTank = new GreenTank();
-        }
     }
 
     public GridPane getMapUI() {
@@ -68,13 +60,14 @@ public class Map implements Settings {
         Map.mapUI = mapUI;
     }
 
-    public void setUserTank(Tank userTank) {
-        this.userTank = userTank;
+
+    public void setCurrentPosition(Position position){
+        mapUI.add(barrier1.getBarrier(), currentPlaceOfTank[1], currentPlaceOfTank[0]);
+        currentPlaceOfTank[0] = position.getY();
+        currentPlaceOfTank[1] = position.getX();
+        mapUI.add(tank.initializeOnTank(), currentPlaceOfTank[1], currentPlaceOfTank[0]);
     }
 
-    public Tank getUserTank() {
-        return userTank;
-    }
 
     int getSize(){
         return this.N;

@@ -31,6 +31,7 @@ abstract public class MyPlayer implements Player{
             NxN[y][x] = '0';
             x += 1;
             NxN[y][x] = 'P';
+            map.setCurrentPosition(new Position(x, y));
         }
 
     }
@@ -41,6 +42,7 @@ abstract public class MyPlayer implements Player{
             NxN[y][x] = '0';
             x -= 1;
             NxN[y][x] = 'P';
+            map.setCurrentPosition(new Position(x, y));
         }
     }
 
@@ -50,6 +52,7 @@ abstract public class MyPlayer implements Player{
             NxN[y][x] = '0';
             y -= 1;
             NxN[y][x] = 'P';
+            map.setCurrentPosition(new Position(x, y));
         }
     }
 
@@ -59,6 +62,7 @@ abstract public class MyPlayer implements Player{
             NxN[y][x] = '0';
             y += 1;
             NxN[y][x] = 'P';
+            map.setCurrentPosition(new Position(x, y));
         }
     }
 
