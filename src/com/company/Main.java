@@ -26,9 +26,9 @@ public class Main extends Application{
                 case LEFT:p.moveLeft();break;
                 case DOWN:p.moveDown();break;
                 case UP:p.moveUp();break;
+                case SPACE:p.fire();break;
                 case ESCAPE: primaryStage.close();break;
             }
-            System.out.print(E.getCode());
         });
     }
     public static void logic(){

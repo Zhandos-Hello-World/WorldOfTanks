@@ -1,6 +1,5 @@
 package com.company;
-
-import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 
 public interface Player {
     void setMap(Map map);
@@ -9,5 +8,6 @@ public interface Player {
     void moveUp();
     void moveDown();
     Position getPosition();
-    public Node initializeOnTank();
+    Pane initializeOnTank();
+    void fire();
 }

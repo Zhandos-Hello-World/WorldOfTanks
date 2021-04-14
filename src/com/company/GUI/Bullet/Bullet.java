@@ -3,10 +3,14 @@ package com.company.GUI.Bullet;
 import com.company.GUI.Tanks.CustomRectangle;
 import com.company.GUI.Tanks.Tank;
 import com.company.GUI.Tanks.WhiteTank;
+import com.company.Position;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
+import java.util.logging.Handler;
+
 public class Bullet {
+    private Position positionOfTheBullet;
     CustomRectangle black;
     CustomRectangle colorOfTheBullet;
     int pixel;
@@ -16,6 +20,9 @@ public class Bullet {
         this.pixel = tank.getPixel();
         black = new CustomRectangle(new Color(0,0,0,1), pixel);
         colorOfTheBullet = new CustomRectangle(new Color(.68,.68,.68, 1), pixel);
+    }
+    public Bullet(Position positionOfTheBullet){
+        this.positionOfTheBullet = positionOfTheBullet;
     }
     public GridPane initializeOnBullet(){
         GridPane bullet = new GridPane();

@@ -1,7 +1,6 @@
 package com.company.GUI.Barier;
 
 import com.company.GUI.Tanks.CustomRectangle;
-import javafx.animation.PathTransition;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
