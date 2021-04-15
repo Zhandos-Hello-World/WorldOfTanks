@@ -2,7 +2,7 @@ package com.company;
 
 public class InvalidMapException extends Exception{
     private String message;
-    InvalidMapException(){
+    public InvalidMapException(){
         message = "Not enough map elements";
     }
 

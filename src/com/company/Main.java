@@ -3,22 +3,28 @@ import com.company.GUI.Tanks.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 public class Main extends Application{
     public static void main(String[] args) {
         launch(args);
     }
     @Override
-    public void start(Stage primaryStage) throws InvalidMapException {
-        Scanner input = new Scanner(System.in);
+    public void start(Stage primaryStage) throws InvalidMapException, FileNotFoundException {
+        Scanner input = new Scanner(new File("src\\com\\company\\Level\\mapFirst.txt"));
         GridPane gp = new GridPane();
         Map map = new Map(input, gp);
         Game game = new Game(map);
         Player p = new RedTank();
         game.addPlayer(p);
-        Scene scene = new Scene(map.getMapUI());
+        HBox hBox = map.Run();
+        Scene scene = new Scene(hBox);
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.show();
         scene.setOnKeyPressed(E ->{
             switch (E.getCode()){

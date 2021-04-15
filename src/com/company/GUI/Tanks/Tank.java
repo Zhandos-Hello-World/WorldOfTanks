@@ -2,7 +2,9 @@ package com.company.GUI.Tanks;
 
 import com.company.GUI.Bullet.Bullet;
 import com.company.GUI.Settings;
+import com.company.InvalidMapException;
 import com.company.MyPlayer;
+import com.company.Position;
 import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -16,7 +18,7 @@ abstract public class Tank extends MyPlayer implements Settings {
     protected CustomRectangle mirror;
     protected CustomRectangle original;
     protected CustomRectangle shadow;
-    protected Bullet bullet;
+    protected static Bullet bullet = new Bullet();
     protected CustomRectangle black = new CustomRectangle(new Color(0, 0, 0, 1), getPixel());
     private static boolean canR, canL, canU = true, canD;
     public GridPane caterpillarLeft() {
@@ -200,10 +202,6 @@ abstract public class Tank extends MyPlayer implements Settings {
         hbox.getChildren().addAll(left, caterpillarLeft(), town(), caterpillarRight());
         pane = new Pane();
         pane.getChildren().add(hbox);
-        System.out.println(canR);
-        System.out.println(canD);
-        System.out.println(canL);
-        System.out.println(canU + "\n");
         if(canU){
             pane.setRotate(0);
         }
@@ -267,17 +265,54 @@ abstract public class Tank extends MyPlayer implements Settings {
     }
     @Override
     public void fire(){
-        if(canR){
-
+        try{
+            if(canR){
+                if(bullet.checkBarrier(map, 0, getPosition())){
+                    Position temp = bullet.getDelete(map, 0, getPosition());
+                    map.delete(temp);
+                    repoint();
+                }
+            }
+            else if(canL){
+                if(bullet.checkBarrier(map, 1, getPosition())){
+                    Position temp = bullet.getDelete(map, 1, getPosition());
+                    map.delete(temp);
+                    repoint();
+                }
+            }
+            else if(canU){
+                if(bullet.checkBarrier(map, 2, getPosition())){
+                    Position temp = bullet.getDelete(map, 2, getPosition());
+                    map.delete(temp);
+                    repoint();
+                }
+            }
+            else if(canD){
+                if(bullet.checkBarrier(map, 3, getPosition())){
+                    Position temp = bullet.getDelete(map, 3, getPosition());
+                    map.delete(temp);
+                    repoint();
+                }
+            }
+        }catch (InvalidMapException ex){
+            //
         }
-        else if(canU){
+    }
 
-        }
-        else if(canD){
 
-        }
-        else{
+    public static boolean isCanU() {
+        return canU;
+    }
 
-        }
+    public static boolean isCanR() {
+        return canR;
+    }
+
+    public static boolean isCanL() {
+        return canL;
+    }
+
+    public static boolean isCanD() {
+        return canD;
     }
 }

@@ -1,13 +1,15 @@
 package com.company;
 
 abstract public class MyPlayer implements Player{
-    private Map map;
-    private char[][]NxN;
-    private int x = 0;
-    private int y = 0;
+    protected Map map;
+    protected char[][]NxN;
+    protected int x = 0;
+    protected int y = 0;
+    protected static int health = 3;
     @Override
     public void setMap(Map map) {
         this.map = map;
+        map.setHealth(health);
         NxN = new char[map.getSize()][map.getSize()];
         try{
             for(int i = 0; i < map.getSize(); i++){
@@ -16,6 +18,23 @@ abstract public class MyPlayer implements Player{
                     if(NxN[i][j] == 'P'){
                         y = i;
                         x = j;
+                    }
+                }
+            }
+        }
+        catch (InvalidMapException ex){
+            System.out.print(ex.getMessage());
+        }
+    }
+    protected void repoint(){
+        this.NxN = new char[map.getSize()][map.getSize()];
+        try{
+            for(int i = 0; i < map.getSize(); i++){
+                for(int j = 0; j < map.getSize(); j++){
+                    NxN[i][j] = map.getValueAt(i, j);
+                    if(NxN[i][j] == 'P'){
+                        this.y = i;
+                        this.x = j;
                     }
                 }
             }
@@ -33,7 +52,6 @@ abstract public class MyPlayer implements Player{
             NxN[y][x] = 'P';
             map.setCurrentPosition(new Position(x, y));
         }
-
     }
 
     @Override
@@ -48,7 +66,7 @@ abstract public class MyPlayer implements Player{
 
     @Override
     public void moveUp() {
-        if(!(-1 == y - 1) && (NxN[y - 1][x] == '0')){
+        if(!(-1 == y - 1) && (NxN[y - 1][x] == '0')) {
             NxN[y][x] = '0';
             y -= 1;
             NxN[y][x] = 'P';

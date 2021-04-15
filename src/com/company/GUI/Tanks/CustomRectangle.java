@@ -1,7 +1,6 @@
 package com.company.GUI.Tanks;
 
 import com.company.GUI.Settings;
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
