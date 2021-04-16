@@ -46,7 +46,8 @@ abstract public class MyPlayer implements Player{
 
     @Override
     public void moveRight() {
-        if(!((map.getSize() == x + 1) && (NxN[y][x + 1] == '0' || NxN[y][x + 1] == 'T'))){
+        if(((map.getSize() > x + 1) && (NxN[y][x + 1] == '0' || NxN[y][x + 1] == 'T'))){
+            System.out.println("Right");
             if(NxN[y][x + 1] == '0'){
                 NxN[y][x] = '0';
                 x += 1;
@@ -61,11 +62,15 @@ abstract public class MyPlayer implements Player{
                 setMap(map);
             }
         }
+        else{
+            System.out.println("Invalid position!");
+        }
     }
 
     @Override
     public void moveLeft() {
         if(!(-1 == x - 1) && (NxN[y][x - 1] == '0' || NxN[y][x - 1] == 'T')){
+            System.out.println("Left");
             if(NxN[y][x - 1] == '0'){
                 NxN[y][x] = '0';
                 x -= 1;
@@ -80,11 +85,15 @@ abstract public class MyPlayer implements Player{
                 setMap(map);
             }
         }
+        else{
+            System.out.println("Invalid position!");
+        }
     }
 
     @Override
     public void moveUp() {
         if(!(-1 == y - 1) && (NxN[y - 1][x] == '0' || NxN[y - 1][x] == 'T')) {
+            System.out.println("Up");
             if(NxN[y - 1][x] == '0'){
                 NxN[y][x] = '0';
                 y -= 1;
@@ -99,11 +108,15 @@ abstract public class MyPlayer implements Player{
                 setMap(map);
             }
         }
+        else{
+            System.out.println("Invalid position!");
+        }
     }
 
     @Override
     public void moveDown() {
-        if(!(map.getSize() == y + 1) && (NxN[y + 1][x] == '0' || NxN[y + 1][x] == 'T')){
+        if((map.getSize() > y + 1) && (NxN[y + 1][x] == '0' || NxN[y + 1][x] == 'T')){
+            System.out.println("Down");
             if (NxN[y + 1][x] == '0') {
                 NxN[y][x] = '0';
                 y += 1;
@@ -117,6 +130,9 @@ abstract public class MyPlayer implements Player{
                 map.setCurrentPosition(new Position(x, y));
                 setMap(map);
             }
+        }
+        else{
+            System.out.println("Invalid Position!");
         }
     }
 
