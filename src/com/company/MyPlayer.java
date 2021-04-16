@@ -46,41 +46,77 @@ abstract public class MyPlayer implements Player{
 
     @Override
     public void moveRight() {
-        if(!(map.getSize() == x + 1) && (NxN[y][x + 1] == '0')){
-            NxN[y][x] = '0';
-            x += 1;
-            NxN[y][x] = 'P';
-            map.setCurrentPosition(new Position(x, y));
+        if(!((map.getSize() == x + 1) && (NxN[y][x + 1] == '0' || NxN[y][x + 1] == 'T'))){
+            if(NxN[y][x + 1] == '0'){
+                NxN[y][x] = '0';
+                x += 1;
+                NxN[y][x] = 'P';
+                map.setCurrentPosition(new Position(x, y));
+            }
+            else if(NxN[y][x + 1] == 'T'){
+                NxN[y][x] = '0';
+                x += 1;
+                NxN[y][x] = 'T';
+                map.setCurrentPosition(new Position(x, y));
+                setMap(map);
+            }
         }
     }
 
     @Override
     public void moveLeft() {
-        if(!(-1 == x - 1) && (NxN[y][x - 1] == '0')){
-            NxN[y][x] = '0';
-            x -= 1;
-            NxN[y][x] = 'P';
-            map.setCurrentPosition(new Position(x, y));
+        if(!(-1 == x - 1) && (NxN[y][x - 1] == '0' || NxN[y][x - 1] == 'T')){
+            if(NxN[y][x - 1] == '0'){
+                NxN[y][x] = '0';
+                x -= 1;
+                NxN[y][x] = 'P';
+                map.setCurrentPosition(new Position(x, y));
+            }
+            else if(NxN[y][x - 1] == 'T'){
+                NxN[y][x] = '0';
+                x -= 1;
+                NxN[y][x] = 'T';
+                map.setCurrentPosition(new Position(x, y));
+                setMap(map);
+            }
         }
     }
 
     @Override
     public void moveUp() {
-        if(!(-1 == y - 1) && (NxN[y - 1][x] == '0')) {
-            NxN[y][x] = '0';
-            y -= 1;
-            NxN[y][x] = 'P';
-            map.setCurrentPosition(new Position(x, y));
+        if(!(-1 == y - 1) && (NxN[y - 1][x] == '0' || NxN[y - 1][x] == 'T')) {
+            if(NxN[y - 1][x] == '0'){
+                NxN[y][x] = '0';
+                y -= 1;
+                NxN[y][x] = 'P';
+                map.setCurrentPosition(new Position(x, y));
+            }
+            else if(NxN[y - 1][x] == 'T'){
+                NxN[y][x] = '0';
+                y -= 1;
+                NxN[y][x] = 'T';
+                map.setCurrentPosition(new Position(x, y));
+                setMap(map);
+            }
         }
     }
 
     @Override
     public void moveDown() {
-        if(!(map.getSize() == y + 1) && (NxN[y + 1][x] == '0')){
-            NxN[y][x] = '0';
-            y += 1;
-            NxN[y][x] = 'P';
-            map.setCurrentPosition(new Position(x, y));
+        if(!(map.getSize() == y + 1) && (NxN[y + 1][x] == '0' || NxN[y + 1][x] == 'T')){
+            if (NxN[y + 1][x] == '0') {
+                NxN[y][x] = '0';
+                y += 1;
+                NxN[y][x] = 'P';
+                map.setCurrentPosition(new Position(x, y));
+            }
+            else if(NxN[y + 1][x] == 'T'){
+                NxN[y][x] = '0';
+                y += 1;
+                NxN[y][x] = 'T';
+                map.setCurrentPosition(new Position(x, y));
+                setMap(map);
+            }
         }
     }
 

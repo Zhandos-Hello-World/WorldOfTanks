@@ -17,6 +17,7 @@ public class Map implements Settings {
     private MyPlayer tank = new YellowTank();
     private Barrier[] barrier = {new Null(), new Water(), new SteelWall(), new Trees(), new BrickWall()};
     private Label labelOfTheHealth = new Label();
+    private int attendance = 0;
     Map(Scanner scanner, GridPane mapUI) throws InvalidMapException {
         setMapUI(mapUI);
         mapUI.setStyle("-fx-background-color: black");
@@ -80,12 +81,41 @@ public class Map implements Settings {
     }
 
     public void setCurrentPosition(Position position) {
-        mapUI.add(barrier1.getBarrier(), currentPlaceOfTank[1], currentPlaceOfTank[0]);
-        NxN[currentPlaceOfTank[0]][currentPlaceOfTank[1]] = '0';
-        currentPlaceOfTank[0] = position.getY();
-        currentPlaceOfTank[1] = position.getX();
-        NxN[position.getY()][position.getX()] = 'P';
-        mapUI.add(tank.initializeOnTank(), currentPlaceOfTank[1], currentPlaceOfTank[0]);
+        if(NxN[position.getY()][position.getX()] == 'T' && attendance == 1){
+            mapUI.add(barrier[3].getBarrier(), currentPlaceOfTank[1], currentPlaceOfTank[0]);
+            NxN[currentPlaceOfTank[0]][currentPlaceOfTank[1]] = 'T';
+            currentPlaceOfTank[0] = position.getY();
+            currentPlaceOfTank[1] = position.getX();
+            NxN[position.getY()][position.getX()] = 'T';
+            mapUI.add(barrier[3].getBarrier(), currentPlaceOfTank[1], currentPlaceOfTank[0]);
+            attendance = 1;
+        }
+        else if(NxN[position.getY()][position.getX()] != 'T' && attendance == 1){
+            mapUI.add(barrier[3].getBarrier(), currentPlaceOfTank[1], currentPlaceOfTank[0]);
+            NxN[currentPlaceOfTank[0]][currentPlaceOfTank[1]] = 'T';
+            currentPlaceOfTank[0] = position.getY();
+            currentPlaceOfTank[1] = position.getX();
+            NxN[position.getY()][position.getX()] = 'P';
+            mapUI.add(tank.initializeOnTank(), currentPlaceOfTank[1], currentPlaceOfTank[0]);
+            attendance = 0;
+        }
+        else if(NxN[position.getY()][position.getX()] == 'T' && attendance != 1){
+            attendance = 1;
+            mapUI.add(barrier1.getBarrier(), currentPlaceOfTank[1], currentPlaceOfTank[0]);
+            NxN[currentPlaceOfTank[0]][currentPlaceOfTank[1]] = '0';
+            currentPlaceOfTank[0] = position.getY();
+            currentPlaceOfTank[1] = position.getX();
+            NxN[position.getY()][position.getX()] = 'T';
+            mapUI.add(barrier[3].getBarrier(), currentPlaceOfTank[1], currentPlaceOfTank[0]);
+        }
+        else{
+            mapUI.add(barrier1.getBarrier(), currentPlaceOfTank[1], currentPlaceOfTank[0]);
+            NxN[currentPlaceOfTank[0]][currentPlaceOfTank[1]] = '0';
+            currentPlaceOfTank[0] = position.getY();
+            currentPlaceOfTank[1] = position.getX();
+            NxN[position.getY()][position.getX()] = 'P';
+            mapUI.add(tank.initializeOnTank(), currentPlaceOfTank[1], currentPlaceOfTank[0]);
+        }
     }
 
     public int getSize() {
