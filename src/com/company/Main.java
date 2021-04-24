@@ -1,5 +1,6 @@
 package com.company;
 import com.company.GUI.Tanks.*;
+import com.company.offlineTwoPlayers.SecondPlayer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
@@ -18,8 +19,10 @@ public class Main extends Application{
         GridPane gp = new GridPane();
         Map map = new Map(input, gp);
         Game game = new Game(map);
-        Player p = new RedTank();
+        Player p = new YellowTank();
+        SecondPlayer another = new SecondPlayer();
         game.addPlayer(p);
+        game.addPlayer(another);
         HBox hBox = map.Run();
         Scene scene = new Scene(hBox);
         primaryStage.setScene(scene);
@@ -33,6 +36,12 @@ public class Main extends Application{
                 case UP:p.moveUp();break;
                 case SPACE:p.fire();break;
                 case ESCAPE: primaryStage.close();break;
+                case W:another.moveUp();break;
+                case A:another.moveLeft();break;
+                case D:another.moveRight();break;
+                case S:another.moveDown();break;
+                case F:another.fire();break;
+                default:break;
             }
         });
     }

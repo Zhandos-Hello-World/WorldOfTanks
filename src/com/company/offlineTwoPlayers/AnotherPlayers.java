@@ -1,12 +1,16 @@
-package com.company;
+package com.company.offlineTwoPlayers;
 
-abstract public class MyPlayer implements Player{
+import com.company.InvalidMapException;
+import com.company.Map;
+import com.company.Position;
+
+public class AnotherPlayers {
     protected Map map;
     protected char[][]NxN;
     protected int x = 0;
     protected int y = 0;
     protected static int health = 3;
-    @Override
+
     public void setMap(Map map) {
         this.map = map;
         map.setHealth(health);
@@ -15,7 +19,7 @@ abstract public class MyPlayer implements Player{
             for(int i = 0; i < map.getSize(); i++){
                 for(int j = 0; j < map.getSize(); j++){
                     NxN[i][j] = map.getValueAt(i, j);
-                    if(NxN[i][j] == 'P'){
+                    if(NxN[i][j] == 'Q'){
                         y = i;
                         x = j;
                     }
@@ -32,7 +36,7 @@ abstract public class MyPlayer implements Player{
             for(int i = 0; i < map.getSize(); i++){
                 for(int j = 0; j < map.getSize(); j++){
                     NxN[i][j] = map.getValueAt(i, j);
-                    if(NxN[i][j] == 'P'){
+                    if(NxN[i][j] == 'Q'){
                         this.y = i;
                         this.x = j;
                     }
@@ -44,7 +48,6 @@ abstract public class MyPlayer implements Player{
         }
     }
 
-    @Override
     public void moveRight() {
         setMap(map);
         if(((map.getSize() > x + 1) && (NxN[y][x + 1] == '0' || NxN[y][x + 1] == 'T'))){
@@ -52,24 +55,23 @@ abstract public class MyPlayer implements Player{
             if(NxN[y][x + 1] == '0'){
                 NxN[y][x] = '0';
                 x += 1;
-                NxN[y][x] = 'P';
-                map.setCurrentPosition(new Position(x, y));
+                NxN[y][x] = 'Q';
+                map.setCurrentPositionAnother(new Position(x, y));
+                setMap(map);
             }
             else if(NxN[y][x + 1] == 'T'){
                 NxN[y][x] = '0';
                 x += 1;
                 NxN[y][x] = 'T';
-                map.setCurrentPosition(new Position(x, y));
+                map.setCurrentPositionAnother(new Position(x, y));
                 setMap(map);
             }
         }
         else{
             System.out.println("Invalid position!");
         }
-        map.print();
     }
 
-    @Override
     public void moveLeft() {
         setMap(map);
         if(!(-1 == x - 1) && (NxN[y][x - 1] == '0' || NxN[y][x - 1] == 'T')){
@@ -77,14 +79,15 @@ abstract public class MyPlayer implements Player{
             if(NxN[y][x - 1] == '0'){
                 NxN[y][x] = '0';
                 x -= 1;
-                NxN[y][x] = 'P';
-                map.setCurrentPosition(new Position(x, y));
+                NxN[y][x] = 'Q';
+                map.setCurrentPositionAnother(new Position(x, y));
+                setMap(map);
             }
             else if(NxN[y][x - 1] == 'T'){
                 NxN[y][x] = '0';
                 x -= 1;
                 NxN[y][x] = 'T';
-                map.setCurrentPosition(new Position(x, y));
+                map.setCurrentPositionAnother(new Position(x, y));
                 setMap(map);
             }
         }
@@ -93,7 +96,6 @@ abstract public class MyPlayer implements Player{
         }
     }
 
-    @Override
     public void moveUp() {
         setMap(map);
         if(!(-1 == y - 1) && (NxN[y - 1][x] == '0' || NxN[y - 1][x] == 'T')) {
@@ -101,14 +103,15 @@ abstract public class MyPlayer implements Player{
             if(NxN[y - 1][x] == '0'){
                 NxN[y][x] = '0';
                 y -= 1;
-                NxN[y][x] = 'P';
-                map.setCurrentPosition(new Position(x, y));
+                NxN[y][x] = 'Q';
+                map.setCurrentPositionAnother(new Position(x, y));
+                setMap(map);
             }
             else if(NxN[y - 1][x] == 'T'){
                 NxN[y][x] = '0';
                 y -= 1;
                 NxN[y][x] = 'T';
-                map.setCurrentPosition(new Position(x, y));
+                map.setCurrentPositionAnother(new Position(x, y));
                 setMap(map);
             }
         }
@@ -117,7 +120,6 @@ abstract public class MyPlayer implements Player{
         }
     }
 
-    @Override
     public void moveDown() {
         setMap(map);
         if((map.getSize() > y + 1) && (NxN[y + 1][x] == '0' || NxN[y + 1][x] == 'T')){
@@ -125,14 +127,15 @@ abstract public class MyPlayer implements Player{
             if (NxN[y + 1][x] == '0') {
                 NxN[y][x] = '0';
                 y += 1;
-                NxN[y][x] = 'P';
-                map.setCurrentPosition(new Position(x, y));
+                NxN[y][x] = 'Q';
+                map.setCurrentPositionAnother(new Position(x, y));
+                setMap(map);
             }
             else if(NxN[y + 1][x] == 'T'){
                 NxN[y][x] = '0';
                 y += 1;
                 NxN[y][x] = 'T';
-                map.setCurrentPosition(new Position(x, y));
+                map.setCurrentPositionAnother(new Position(x, y));
                 setMap(map);
             }
         }
@@ -140,8 +143,6 @@ abstract public class MyPlayer implements Player{
             System.out.println("Invalid Position!");
         }
     }
-
-    @Override
     public Position getPosition() {
         return new Position(x, y);
     }

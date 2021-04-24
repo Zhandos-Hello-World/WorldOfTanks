@@ -1,26 +1,35 @@
-package com.company.GUI.Tanks;
+package com.company.offlineTwoPlayers;
 
 import com.company.GUI.Bullet.Bullet;
 import com.company.GUI.Settings;
+import com.company.GUI.Tanks.CustomRectangle;
 import com.company.InvalidMapException;
-import com.company.MyPlayer;
 import com.company.Position;
 import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-abstract public class Tank extends MyPlayer implements Settings {
-    protected Color mirrorColor = new Color(0, 0, 0, 1);
-    protected Color originalColor = new Color(0, 0, 0, 1);
-    protected Color shadowColor = new Color(0, 0, 0, 1);
+
+public class SecondPlayer extends AnotherPlayers implements Settings {
+    protected Color mirrorColor;
+    protected Color originalColor;
+    protected Color shadowColor;
     protected static Pane pane;
     protected CustomRectangle mirror;
     protected CustomRectangle original;
     protected CustomRectangle shadow;
-    protected static Bullet bullet = new Bullet('Q');
+    protected static Bullet bullet = new Bullet('P');
     protected CustomRectangle black = new CustomRectangle(new Color(0, 0, 0, 1), getPixel());
     private static boolean canR, canL, canU = true, canD;
+    public SecondPlayer(){
+        this.mirrorColor = new Color(1,1,1, 1);
+        this.originalColor = new Color(.71,.19,.13, 1);
+        this.shadowColor = new Color(.35,0,.48, 1);
+        this.mirror = new CustomRectangle(this.mirrorColor, getPixel());
+        this.original = new CustomRectangle(this.originalColor, getPixel());
+        this.shadow = new CustomRectangle(this.shadowColor, getPixel());
+    }
     public GridPane caterpillarLeft() {
         GridPane caterpillarLeft = new GridPane();
         caterpillarLeft.setStyle("-fx-background-color: black; -fx-color-label-visible: true");
@@ -223,7 +232,6 @@ abstract public class Tank extends MyPlayer implements Settings {
         canL = false;
         canU = false;
     }
-
     public void moveRight() {
         if (canR) {
             super.moveRight();
@@ -263,7 +271,6 @@ abstract public class Tank extends MyPlayer implements Settings {
             canD = true;
         }
     }
-    @Override
     public void fire(){
         try{
             if(canR){

@@ -15,18 +15,20 @@ public class Bullet {
     int pixel;
     private Position positionOfTheBullet;
     private static boolean check = false;
-    public Bullet(){
+    private char goal;
+    public Bullet(char goal){
         //for get pixel
         Tank tank = new WhiteTank();
         this.pixel = tank.getPixel();
         black = new CustomRectangle(new Color(0,0,0,1), pixel);
         colorOfTheBullet = new CustomRectangle(new Color(.68,.68,.68, 1), pixel);
+        this.goal = goal;
     }
     public boolean checkBarrier(Map map, int rotate, Position position) throws InvalidMapException {
         this.positionOfTheBullet = position;
         if(rotate == 0){
             for(int i = positionOfTheBullet.getX(); i < map.getSize(); i++){
-                if(map.getValueAt(positionOfTheBullet.getY(), i) == 'B'){
+                if(map.getValueAt(positionOfTheBullet.getY(), i) == 'B' || map.getValueAt(positionOfTheBullet.getY(), i) == this.goal){
                     positionOfTheBullet = new Position(i, positionOfTheBullet.getY());
                     check = true;
                     break;
@@ -39,7 +41,7 @@ public class Bullet {
         }
         else if(rotate == 1){
             for(int i = positionOfTheBullet.getX(); i >= 0; i--){
-                if(map.getValueAt(positionOfTheBullet.getY(), i) == 'B'){
+                if(map.getValueAt(positionOfTheBullet.getY(), i) == 'B' || map.getValueAt(positionOfTheBullet.getY(), i) == goal){
                     positionOfTheBullet = new Position(i, positionOfTheBullet.getY());
                     check = true;
                     break;
@@ -52,7 +54,7 @@ public class Bullet {
         }
         else if(rotate == 2){
             for(int i = positionOfTheBullet.getY(); i >= 0; i--){
-                if(map.getValueAt(i, positionOfTheBullet.getX()) == 'B'){
+                if(map.getValueAt(i, positionOfTheBullet.getX()) == 'B' || map.getValueAt(i, positionOfTheBullet.getX()) == goal){
                     positionOfTheBullet = new Position(positionOfTheBullet.getX(), i);
                     check = true;
                     break;
@@ -66,7 +68,7 @@ public class Bullet {
         }
         else if(rotate == 3){
             for(int i = positionOfTheBullet.getY(); i < map.getSize(); i++){
-                if(map.getValueAt(i, positionOfTheBullet.getX()) == 'B'){
+                if(map.getValueAt(i, positionOfTheBullet.getX()) == 'B' || map.getValueAt(i, positionOfTheBullet.getX()) == goal){
                     positionOfTheBullet = new Position(positionOfTheBullet.getX(), i);
                     check = true;
                     break;
@@ -87,7 +89,6 @@ public class Bullet {
             throw new InvalidMapException();
         }
         else{
-
             check = false;
             return positionOfTheBullet;
         }

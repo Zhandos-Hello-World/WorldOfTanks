@@ -11,4 +11,4 @@ T S 0 0 0 0 0 S S W W 0 S
 B S 0 S 0 B 0 0 0 S 0 T T
 0 0 0 0 0 0 0 B 0 0 W 0 S
 T 0 T 0 0 B B B B 0 0 0 W
-0 0 0 0 P B 0 B 0 0 0 0 0
+0 0 0 0 P B 0 B 0 0 0 Q 0

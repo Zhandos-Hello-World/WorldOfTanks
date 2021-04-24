@@ -1,7 +1,7 @@
 package com.company.GUI;
 
 public interface Settings {
-    int pixel = 3;
+    int pixel = 1;
     int sizeHeight = 16;
     int sizeWidth = 16;
     default int getPixel(){

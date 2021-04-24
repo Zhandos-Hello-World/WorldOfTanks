@@ -5,7 +5,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
 public class BrickWall extends Barrier{
-    private boolean destroyed = false;
     private GridPane gridPane;
     public BrickWall(){
         this.color1 = new CustomRectangle(new Color(.61,0,0, 1),getPixel());
