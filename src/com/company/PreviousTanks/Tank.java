@@ -1,71 +1,26 @@
-package com.company.offlineTwoPlayers;
+package com.company.PreviousTanks;
 
-import com.company.GUI.Bullet.Bullet;
-import com.company.GUI.Settings;
-import com.company.GUI.Tanks.CustomRectangle;
-import com.company.InvalidMapException;
-import com.company.Position;
 import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
-public class SecondPlayer extends AnotherPlayers implements Settings {
-    protected Color mirrorColor;
-    protected Color originalColor;
-    protected Color shadowColor;
+abstract public class Tank implements SettingsP {
+    protected Color mirrorColor = new Color(0, 0, 0, 1);
+    protected Color originalColor = new Color(0, 0, 0, 1);
+    protected Color shadowColor = new Color(0, 0, 0, 1);
     protected static Pane pane;
     protected CustomRectangle mirror;
     protected CustomRectangle original;
     protected CustomRectangle shadow;
-    protected static Bullet bullet = new Bullet('P');
-    protected CustomRectangle black = new CustomRectangle(new Color(0, 0, 0, 1), getPixel());
-    private static boolean canR, canL, canU = true, canD;
-    public SecondPlayer(){
-        this.mirrorColor = new Color(1,1,1, 1);
-        this.originalColor = new Color(.71,.19,.13, 1);
-        this.shadowColor = new Color(.35,0,.48, 1);
-        this.mirror = new CustomRectangle(this.mirrorColor, getPixel());
-        this.original = new CustomRectangle(this.originalColor, getPixel());
-        this.shadow = new CustomRectangle(this.shadowColor, getPixel());
-    }
-    public void setColor(int i){
-        if(i == 0){
-            this.mirrorColor = new Color(.91,.91,.58, 1);
-            this.originalColor = new Color(.91,.61,.13, 1);
-            this.shadowColor = new Color(.42,.42,0, 1);
-        }
-        else if(i == 1){
-            this.mirrorColor = new Color(1,1,1, 1);
-            this.originalColor = new Color(.71,.19,.13, 1);
-            this.shadowColor = new Color(.35,0,.48, 1);
-            this.mirror = new CustomRectangle(this.mirrorColor, getPixel());
-        }
-        else if(i == 2){
-            this.mirrorColor = new Color(.71,.97,.81, 1);
-            this.originalColor = new Color(0,.55,.19, 1);
-            this.shadowColor = new Color(0,.32,0, 1);
-        }
-        else if(i == 3){
-            this.mirrorColor = new Color(1,1,1, 1);
-            this.originalColor = new Color(.42,.42,.42, 1);
-            this.shadowColor = new Color(0,.17,.20, 1);
-        }
-        this.mirror = new CustomRectangle(this.mirrorColor, getPixel());
-        this.original = new CustomRectangle(this.originalColor, getPixel());
-        this.shadow = new CustomRectangle(this.shadowColor, getPixel());
-    }
-
-
-
+    protected CustomRectangle black = new CustomRectangle(new Color(.13,.15,.17, 1), getPixel());
     public GridPane caterpillarLeft() {
         GridPane caterpillarLeft = new GridPane();
         caterpillarLeft.setStyle("-fx-background-color: black; -fx-color-label-visible: true");
 
         caterpillarLeft.setPadding(new Insets(0, 0, 0, 0));
 
-        CustomRectangle black = new CustomRectangle(new Color(0, 0, 0, 1), getPixel());
         for (int i = 0; i <= 1; i++) {
             for (int j = 0; j < 3; j++) {
                 caterpillarLeft.add(black.get(), j, i);
@@ -143,7 +98,6 @@ public class SecondPlayer extends AnotherPlayers implements Settings {
     }
     public GridPane town() {
         GridPane townOfTheTank = new GridPane();
-        townOfTheTank.setStyle("-fx-background-color: black; -fx-color-label-visible: true");
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j <= 6; j++) {
                 if (j == 3) {
@@ -229,7 +183,7 @@ public class SecondPlayer extends AnotherPlayers implements Settings {
     public Pane initializeOnTank() {
         HBox left = new HBox();
         GridPane gp = new GridPane();
-        for(int i = 0; i < 1; i++) {
+        for(int i = 0; i < 10; i++) {
             for(int j = 0; j < 13; j++){
                 gp.add(black.get(), i, j);
             }
@@ -240,100 +194,6 @@ public class SecondPlayer extends AnotherPlayers implements Settings {
         hbox.getChildren().addAll(left, caterpillarLeft(), town(), caterpillarRight());
         pane = new Pane();
         pane.getChildren().add(hbox);
-        if(canU){
-            pane.setRotate(0);
-        }
-        else if(canR){
-            pane.setRotate(90);
-        }
-        else if(canL){
-            pane.setRotate(-90);
-        }
-        else{
-            pane.setRotate(-180);
-        }
         return pane;
-    }
-
-    private void cannotRLUD() {
-        canD = false;
-        canR = false;
-        canL = false;
-        canU = false;
-    }
-    public void moveRight() {
-        if (canR) {
-            super.moveRight();
-        } else {
-            pane.setRotate(90);
-            cannotRLUD();
-            canR = true;
-        }
-    }
-
-    public void moveLeft() {
-        if (canL) {
-            super.moveLeft();
-        } else {
-            pane.setRotate(-90);
-            cannotRLUD();
-            canL = true;
-        }
-    }
-
-    public void moveUp() {
-        if (canU) {
-            super.moveUp();
-        } else {
-            pane.setRotate(0);
-            cannotRLUD();
-            canU = true;
-        }
-    }
-
-    public void moveDown() {
-        if (canD) {
-            super.moveDown();
-        } else {
-            pane.setRotate(180);
-            cannotRLUD();
-            canD = true;
-        }
-    }
-    public void fire(){
-        if(!map.isQdestroyed()){
-            try{
-                if(canR){
-                    if(bullet.checkBarrier(map, 0, getPosition())){
-                        Position temp = bullet.getDelete(map, 0, getPosition());
-                        map.delete(temp);
-                        repoint();
-                    }
-                }
-                else if(canL){
-                    if(bullet.checkBarrier(map, 1, getPosition())){
-                        Position temp = bullet.getDelete(map, 1, getPosition());
-                        map.delete(temp);
-                        repoint();
-                    }
-                }
-                else if(canU){
-                    if(bullet.checkBarrier(map, 2, getPosition())){
-                        Position temp = bullet.getDelete(map, 2, getPosition());
-                        map.delete(temp);
-                        repoint();
-                    }
-                }
-                else if(canD){
-                    if(bullet.checkBarrier(map, 3, getPosition())){
-                        Position temp = bullet.getDelete(map, 3, getPosition());
-                        map.delete(temp);
-                        repoint();
-                    }
-                }
-            }catch (InvalidMapException ex){
-                //
-            }
-        }
     }
 }

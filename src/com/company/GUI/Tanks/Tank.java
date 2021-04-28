@@ -265,37 +265,39 @@ abstract public class Tank extends MyPlayer implements Settings {
     }
     @Override
     public void fire(){
-        try{
-            if(canR){
-                if(bullet.checkBarrier(map, 0, getPosition())){
-                    Position temp = bullet.getDelete(map, 0, getPosition());
-                    map.delete(temp);
-                    repoint();
+        if(!map.isPdestroyed()) {
+            try{
+                if(canR){
+                    if(bullet.checkBarrier(map, 0, getPosition())){
+                        Position temp = bullet.getDelete(map, 0, getPosition());
+                        map.delete(temp);
+                        repoint();
+                    }
                 }
-            }
-            else if(canL){
-                if(bullet.checkBarrier(map, 1, getPosition())){
-                    Position temp = bullet.getDelete(map, 1, getPosition());
-                    map.delete(temp);
-                    repoint();
+                else if(canL){
+                    if(bullet.checkBarrier(map, 1, getPosition())){
+                        Position temp = bullet.getDelete(map, 1, getPosition());
+                        map.delete(temp);
+                        repoint();
+                    }
                 }
-            }
-            else if(canU){
-                if(bullet.checkBarrier(map, 2, getPosition())){
-                    Position temp = bullet.getDelete(map, 2, getPosition());
-                    map.delete(temp);
-                    repoint();
+                else if(canU){
+                    if(bullet.checkBarrier(map, 2, getPosition())){
+                        Position temp = bullet.getDelete(map, 2, getPosition());
+                        map.delete(temp);
+                        repoint();
+                    }
                 }
-            }
-            else if(canD){
-                if(bullet.checkBarrier(map, 3, getPosition())){
-                    Position temp = bullet.getDelete(map, 3, getPosition());
-                    map.delete(temp);
-                    repoint();
+                else if(canD){
+                    if(bullet.checkBarrier(map, 3, getPosition())){
+                        Position temp = bullet.getDelete(map, 3, getPosition());
+                        map.delete(temp);
+                        repoint();
+                    }
                 }
+            }catch (InvalidMapException ex){
+                //
             }
-        }catch (InvalidMapException ex){
-            //
         }
     }
 }

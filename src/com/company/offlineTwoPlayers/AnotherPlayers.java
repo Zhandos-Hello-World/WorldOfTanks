@@ -51,7 +51,6 @@ public class AnotherPlayers {
     public void moveRight() {
         setMap(map);
         if(((map.getSize() > x + 1) && (NxN[y][x + 1] == '0' || NxN[y][x + 1] == 'T'))){
-            System.out.println("Right");
             if(NxN[y][x + 1] == '0'){
                 NxN[y][x] = '0';
                 x += 1;
@@ -67,15 +66,11 @@ public class AnotherPlayers {
                 setMap(map);
             }
         }
-        else{
-            System.out.println("Invalid position!");
-        }
     }
 
     public void moveLeft() {
         setMap(map);
         if(!(-1 == x - 1) && (NxN[y][x - 1] == '0' || NxN[y][x - 1] == 'T')){
-            System.out.println("Left");
             if(NxN[y][x - 1] == '0'){
                 NxN[y][x] = '0';
                 x -= 1;
@@ -90,9 +85,6 @@ public class AnotherPlayers {
                 map.setCurrentPositionAnother(new Position(x, y));
                 setMap(map);
             }
-        }
-        else{
-            System.out.println("Invalid position!");
         }
     }
 
@@ -115,15 +107,11 @@ public class AnotherPlayers {
                 setMap(map);
             }
         }
-        else{
-            System.out.println("Invalid position!");
-        }
     }
 
     public void moveDown() {
         setMap(map);
         if((map.getSize() > y + 1) && (NxN[y + 1][x] == '0' || NxN[y + 1][x] == 'T')){
-            System.out.println("Down");
             if (NxN[y + 1][x] == '0') {
                 NxN[y][x] = '0';
                 y += 1;
@@ -138,9 +126,6 @@ public class AnotherPlayers {
                 map.setCurrentPositionAnother(new Position(x, y));
                 setMap(map);
             }
-        }
-        else{
-            System.out.println("Invalid Position!");
         }
     }
     public Position getPosition() {

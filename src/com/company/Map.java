@@ -188,6 +188,12 @@ public class Map implements Settings {
         }
         NxN[position.getY()][position.getX()] = '0';
     }
+    public boolean isQdestroyed(){
+        return Qdestroyed;
+    }
+    public boolean isPdestroyed(){
+        return Pdestroyed;
+    }
 
     public char getValueAt(int y, int x) throws InvalidMapException {
         if (x >= NxN.length || y >= NxN.length) {

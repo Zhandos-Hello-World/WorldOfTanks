@@ -1,0 +1,10 @@
+.button{
+    -fx-background-color: black;
+    -fx-arc-height: 25;
+    -fx-arc-width: 25;
+    -fx-font: bold italic 20pt "Calibri Light";
+    -fx-text-fill: white;
+}
+.button:hover{
+    -fx-background-color: #C3534FFF;
+}

@@ -48,7 +48,6 @@ abstract public class MyPlayer implements Player{
     public void moveRight() {
         setMap(map);
         if(((map.getSize() > x + 1) && (NxN[y][x + 1] == '0' || NxN[y][x + 1] == 'T'))){
-            System.out.println("Right");
             if(NxN[y][x + 1] == '0'){
                 NxN[y][x] = '0';
                 x += 1;
@@ -63,17 +62,12 @@ abstract public class MyPlayer implements Player{
                 setMap(map);
             }
         }
-        else{
-            System.out.println("Invalid position!");
-        }
-        map.print();
     }
 
     @Override
     public void moveLeft() {
         setMap(map);
         if(!(-1 == x - 1) && (NxN[y][x - 1] == '0' || NxN[y][x - 1] == 'T')){
-            System.out.println("Left");
             if(NxN[y][x - 1] == '0'){
                 NxN[y][x] = '0';
                 x -= 1;
@@ -88,16 +82,12 @@ abstract public class MyPlayer implements Player{
                 setMap(map);
             }
         }
-        else{
-            System.out.println("Invalid position!");
-        }
     }
 
     @Override
     public void moveUp() {
         setMap(map);
         if(!(-1 == y - 1) && (NxN[y - 1][x] == '0' || NxN[y - 1][x] == 'T')) {
-            System.out.println("Up");
             if(NxN[y - 1][x] == '0'){
                 NxN[y][x] = '0';
                 y -= 1;
@@ -112,16 +102,12 @@ abstract public class MyPlayer implements Player{
                 setMap(map);
             }
         }
-        else{
-            System.out.println("Invalid position!");
-        }
     }
 
     @Override
     public void moveDown() {
         setMap(map);
         if((map.getSize() > y + 1) && (NxN[y + 1][x] == '0' || NxN[y + 1][x] == 'T')){
-            System.out.println("Down");
             if (NxN[y + 1][x] == '0') {
                 NxN[y][x] = '0';
                 y += 1;
@@ -135,9 +121,6 @@ abstract public class MyPlayer implements Player{
                 map.setCurrentPosition(new Position(x, y));
                 setMap(map);
             }
-        }
-        else{
-            System.out.println("Invalid Position!");
         }
     }
 
