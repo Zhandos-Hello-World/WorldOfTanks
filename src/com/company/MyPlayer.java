@@ -9,7 +9,7 @@ abstract public class MyPlayer implements Player{
     @Override
     public void setMap(Map map) {
         this.map = map;
-        map.setHealth(health);
+        map.setHealthP(health);
         NxN = new char[map.getSize()][map.getSize()];
         try{
             for(int i = 0; i < map.getSize(); i++){

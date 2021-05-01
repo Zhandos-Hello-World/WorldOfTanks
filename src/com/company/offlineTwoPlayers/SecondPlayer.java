@@ -277,35 +277,24 @@ public class SecondPlayer extends AnotherPlayers implements Settings {
         }
     }
     public void fire(){
-        if(!map.isQdestroyed()){
+        if(!map.isQdestroyed()) {
             try{
                 if(canR){
-                    if(bullet.checkBarrier(map, 0, getPosition())){
-                        Position temp = bullet.getDelete(map, 0, getPosition());
-                        map.delete(temp);
-                        repoint();
-                    }
+                    bullet.checkBarrier(map, 0, getPosition());
+                    repoint();
                 }
                 else if(canL){
-                    if(bullet.checkBarrier(map, 1, getPosition())){
-                        Position temp = bullet.getDelete(map, 1, getPosition());
-                        map.delete(temp);
-                        repoint();
-                    }
+                    bullet.checkBarrier(map, 1, getPosition());
+                    repoint();
+
                 }
                 else if(canU){
-                    if(bullet.checkBarrier(map, 2, getPosition())){
-                        Position temp = bullet.getDelete(map, 2, getPosition());
-                        map.delete(temp);
-                        repoint();
-                    }
+                    bullet.checkBarrier(map, 2, getPosition());
+                    repoint();
                 }
                 else if(canD){
-                    if(bullet.checkBarrier(map, 3, getPosition())){
-                        Position temp = bullet.getDelete(map, 3, getPosition());
-                        map.delete(temp);
-                        repoint();
-                    }
+                    bullet.checkBarrier(map, 3, getPosition());
+                    repoint();
                 }
             }catch (InvalidMapException ex){
                 //

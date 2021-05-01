@@ -4,7 +4,6 @@ import com.company.GUI.Bullet.Bullet;
 import com.company.GUI.Settings;
 import com.company.InvalidMapException;
 import com.company.MyPlayer;
-import com.company.Position;
 import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -267,32 +266,21 @@ abstract public class Tank extends MyPlayer implements Settings {
         if(!map.isPdestroyed()) {
             try{
                 if(canR){
-                    if(bullet.checkBarrier(map, 0, getPosition())){
-                        Position temp = bullet.getDelete(map, 0, getPosition());
-                        map.delete(temp);
-                        repoint();
-                    }
+                    bullet.checkBarrier(map, 0, getPosition());
+                    repoint();
                 }
                 else if(canL){
-                    if(bullet.checkBarrier(map, 1, getPosition())){
-                        Position temp = bullet.getDelete(map, 1, getPosition());
-                        map.delete(temp);
-                        repoint();
-                    }
+                    bullet.checkBarrier(map, 1, getPosition());
+                    repoint();
+
                 }
                 else if(canU){
-                    if(bullet.checkBarrier(map, 2, getPosition())){
-                        Position temp = bullet.getDelete(map, 2, getPosition());
-                        map.delete(temp);
-                        repoint();
-                    }
+                    bullet.checkBarrier(map, 2, getPosition());
+                    repoint();
                 }
                 else if(canD){
-                    if(bullet.checkBarrier(map, 3, getPosition())){
-                        Position temp = bullet.getDelete(map, 3, getPosition());
-                        map.delete(temp);
-                        repoint();
-                    }
+                    bullet.checkBarrier(map, 3, getPosition());
+                    repoint();
                 }
             }catch (InvalidMapException ex){
                 //

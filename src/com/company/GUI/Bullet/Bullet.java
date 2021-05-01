@@ -23,6 +23,7 @@ public class Bullet implements Settings {
     private char goal;
     private GridPane bullet;
     private Barrier n = new Null();
+    private boolean canFire = true;
     public Bullet(char goal){
         //for get pixel
         Tank tank = new WhiteTank();
@@ -31,21 +32,19 @@ public class Bullet implements Settings {
         colorOfTheBullet = new CustomRectangle(new Color(.68,.68,.68, 1), pixel);
         this.goal = goal;
     }
-    public boolean checkBarrier(Map map, int rotate, Position position) throws InvalidMapException {
+    public void checkBarrier(Map map, int rotate, Position position) throws InvalidMapException {
         this.positionOfTheBullet = position;
-        if(rotate == 0){
+        if(rotate == 0 && canFire){
             int endX = map.getSize() * 2 * getPixel() * getSizeWidth();
-            int index = 0;
             for(int i = positionOfTheBullet.getX(); i < map.getSize(); i++){
                 if(map.getValueAt(positionOfTheBullet.getY(), i) == 'B' || map.getValueAt(positionOfTheBullet.getY(), i) == this.goal){
                     positionOfTheBullet = new Position(i, positionOfTheBullet.getY());
                     check = true;
-                    index = i;
                     break;
                 }
                 else if(map.getValueAt(positionOfTheBullet.getY(), i) == 'S'){
-                    check = false;
-                    index = i;
+                    check = true;
+                    positionOfTheBullet = new Position(i, positionOfTheBullet.getY());
                     break;
                 }
             }
@@ -53,27 +52,29 @@ public class Bullet implements Settings {
                 endX = 2 * getSizeWidth() * getPixel() * positionOfTheBullet.getX();
             }
             initializeOnBullet();
-            System.out.println(positionOfTheBullet.getX() * 2 * getPixel() * getSizeWidth());
-            System.out.println(endX);
-            System.out.println();
-            Line line = new Line(position.getX() * 2 * getPixel() * getSizeWidth(), position.getY() * 2 * getPixel() * getSizeHeight() + (getSizeHeight() * getPixel()), endX, positionOfTheBullet.getY() * 2 * getPixel() * getSizeHeight() + (getSizeHeight() * getPixel()));
+            Line line = new Line(position.getX() * 2 * getPixel() * getSizeWidth() + 2 * getSizeWidth(), position.getY() * 2 * getPixel() * getSizeHeight() + (getSizeHeight() * getPixel()), endX, positionOfTheBullet.getY() * 2 * getPixel() * getSizeHeight() + (getSizeHeight() * getPixel()));
             line.setVisible(false);
             PathTransition animationOfTheTank = new PathTransition();
-            Rectangle rectangle = new Rectangle(0, 0, 5, 5);
-            rectangle.setFill(Color.ORANGE);
             bullet.setRotate(90);
+            int length = position.getX() - position.getX() * 2 * getPixel() * getSizeWidth() + 2 * getSizeWidth();
             animationOfTheTank.setDuration(Duration.millis(400));
             animationOfTheTank.setPath(line);
             animationOfTheTank.setNode(bullet);
             animationOfTheTank.play();
             Map.pane.getChildren().addAll(line, bullet);
+            canFire = false;
+            System.out.println(positionOfTheBullet.getX() + ", " + positionOfTheBullet.getY());
             animationOfTheTank.setOnFinished(event -> {
-                Map.pane.getChildren().remove(bullet);
-                bullet.setGridLinesVisible(false);
+                canFire = true;
                 bullet.setVisible(false);
+                if(check){
+                    map.delete(positionOfTheBullet);
+                    check = false;
+                }
             });
         }
-        else if(rotate == 1){
+        else if(rotate == 1 && canFire){
+            int endX = 0;
             for(int i = positionOfTheBullet.getX(); i >= 0; i--){
                 if(map.getValueAt(positionOfTheBullet.getY(), i) == 'B' || map.getValueAt(positionOfTheBullet.getY(), i) == goal){
                     positionOfTheBullet = new Position(i, positionOfTheBullet.getY());
@@ -81,12 +82,38 @@ public class Bullet implements Settings {
                     break;
                 }
                 else if(map.getValueAt(positionOfTheBullet.getY(), i) == 'S'){
-                    check = false;
+                    positionOfTheBullet = new Position(i, positionOfTheBullet.getY());
+                    check = true;
                     break;
                 }
             }
+            if(check && !position.equals(positionOfTheBullet)){
+                endX = 2 * getSizeWidth() * getPixel() * positionOfTheBullet.getX() + getSizeWidth();
+            }
+            initializeOnBullet();
+            Line line = new Line(position.getX() * 2 * getPixel() * getSizeWidth() -   getSizeWidth(), position.getY() * 2 * getPixel() * getSizeHeight() + (getSizeHeight() * getPixel()), endX, positionOfTheBullet.getY() * 2 * getPixel() * getSizeHeight() + (getSizeHeight() * getPixel()));
+            line.setVisible(false);
+            PathTransition animationOfTheTank = new PathTransition();
+            animationOfTheTank.setDuration(Duration.millis(400));
+            bullet.setRotate(-90);
+            animationOfTheTank.setPath(line);
+            animationOfTheTank.setNode(bullet);
+            animationOfTheTank.play();
+            Map.pane.getChildren().addAll(line, bullet);
+            canFire = false;
+            System.out.println(positionOfTheBullet.getX() + ", " + positionOfTheBullet.getY());
+            animationOfTheTank.setOnFinished(event -> {
+                canFire = true;
+                bullet.setVisible(false);
+                if(check && !position.equals(positionOfTheBullet)){
+                    map.delete(positionOfTheBullet);
+                    check = false;
+                }
+            });
+
         }
-        else if(rotate == 2){
+        else if(rotate == 2 && canFire){
+            int endY = 0;
             for(int i = positionOfTheBullet.getY(); i >= 0; i--){
                 if(map.getValueAt(i, positionOfTheBullet.getX()) == 'B' || map.getValueAt(i, positionOfTheBullet.getX()) == goal){
                     positionOfTheBullet = new Position(positionOfTheBullet.getX(), i);
@@ -94,13 +121,37 @@ public class Bullet implements Settings {
                     break;
                 }
                 else if(map.getValueAt(i, positionOfTheBullet.getX()) == 'S'){
-                    check = false;
+                    positionOfTheBullet = new Position(positionOfTheBullet.getX(), i);
+                    check = true;
                     break;
                 }
             }
-
+            if(check && !position.equals(positionOfTheBullet)){
+                endY = 2 * getSizeHeight() * getPixel() * positionOfTheBullet.getY() + 2 * (getSizeWidth() * getPixel());
+            }
+            initializeOnBullet();
+            Line line = new Line(position.getX() * 2 * getPixel() * getSizeWidth() + (getSizeWidth() * getPixel()) , position.getY() * 2 * getPixel() * getSizeHeight() - getSizeWidth(), position.getX() * 2 * getPixel() * getSizeWidth() + (getSizeWidth() * getPixel()), endY);
+            line.setVisible(false);
+            PathTransition animationOfTheTank = new PathTransition();
+            animationOfTheTank.setDuration(Duration.millis(400));
+            bullet.setRotate(0);
+            animationOfTheTank.setPath(line);
+            animationOfTheTank.setNode(bullet);
+            animationOfTheTank.play();
+            Map.pane.getChildren().addAll(line, bullet);
+            canFire = false;
+            System.out.println(positionOfTheBullet.getX() + ", " + positionOfTheBullet.getY());
+            animationOfTheTank.setOnFinished(event -> {
+                canFire = true;
+                bullet.setVisible(false);
+                if(check && !position.equals(positionOfTheBullet)){
+                    map.delete(positionOfTheBullet);
+                    check = false;
+                }
+            });
         }
-        else if(rotate == 3){
+        else if(rotate == 3 && canFire){
+            int endY = map.getSize() * 2 * getPixel() * getSizeHeight();
             for(int i = positionOfTheBullet.getY(); i < map.getSize(); i++){
                 if(map.getValueAt(i, positionOfTheBullet.getX()) == 'B' || map.getValueAt(i, positionOfTheBullet.getX()) == goal){
                     positionOfTheBullet = new Position(positionOfTheBullet.getX(), i);
@@ -108,29 +159,41 @@ public class Bullet implements Settings {
                     break;
                 }
                 else if(map.getValueAt(i, positionOfTheBullet.getX()) == 'S'){
-                    check = false;
+                    check = true;
+                    positionOfTheBullet = new Position(positionOfTheBullet.getX(), i);
                     break;
                 }
             }
-        }
-        else{
-            check = false;
-        }
-        return check;
-    }
-    public Position getDelete(Map map, int rotate, Position position) throws InvalidMapException {
-        if(!checkBarrier(map, rotate, position)){
-            throw new InvalidMapException();
-        }
-        else{
-            check = false;
-            return positionOfTheBullet;
+            if(check ){
+                endY = 2 * getSizeHeight() * getPixel() * positionOfTheBullet.getY() -  (getSizeWidth() * getPixel());
+            }
+            initializeOnBullet();
+            Line line = new Line(position.getX() * 2 * getPixel() * getSizeWidth() + (getSizeWidth() * getPixel()) , position.getY() * 2 * getPixel() * getSizeHeight() + getSizeWidth(), position.getX() * 2 * getPixel() * getSizeWidth() + (getSizeWidth() * getPixel()), endY);
+            line.setVisible(false);
+            PathTransition animationOfTheTank = new PathTransition();
+            animationOfTheTank.setDuration(Duration.millis(400));
+            bullet.setRotate(180);
+            animationOfTheTank.setPath(line);
+            animationOfTheTank.setNode(bullet);
+            animationOfTheTank.play();
+            Map.pane.getChildren().addAll(line, bullet);
+            canFire = false;
+            System.out.println(positionOfTheBullet.getX() + ", " + positionOfTheBullet.getY());
+            animationOfTheTank.setOnFinished(event -> {
+                canFire = true;
+                bullet.setVisible(false);
+                if(check && !position.equals(positionOfTheBullet)){
+                    map.delete(positionOfTheBullet);
+                    check = false;
+                }
+            });
         }
     }
 
 
     public void initializeOnBullet(){
         bullet =  new GridPane();
+        bullet.setVisible(true);
         for(int i = 0; i < 14; i++){
             for(int j = 0; j < 13; j++){
                 if(i < 3){

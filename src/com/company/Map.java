@@ -22,12 +22,16 @@ public class Map implements Settings {
     private Barrier barrier1 = new Null();
     private MyPlayer tank = new YellowTank();
     private Barrier[] barrier = {new Null(), new Water(), new SteelWall(), new Trees(), new BrickWall()};
-    private Label labelOfTheHealth = new Label();
+    private static Label labelOfTheHealthP = new Label();
+    private static Label labelOfTheHealthQ = new Label();
     private SecondPlayer another = new SecondPlayer();
     private int attendance = 0;
     private int attendanceAnother = 0;
     private boolean Qdestroyed = false;
     private boolean Pdestroyed = false;
+    private static Position spawnPointQ;
+    private static Position spawnPointP;
+
     Map(Scanner scanner, GridPane mapUI) throws InvalidMapException {
         setMapUI(mapUI);
         mapUI.setStyle("-fx-background-color: black");
@@ -44,6 +48,7 @@ public class Map implements Settings {
                         mapUI.add(tank.initializeOnTank(), x, y);
                         currentPlaceOfTank[0] = y;
                         currentPlaceOfTank[1] = x;
+                        spawnPointP = new Position(x, y);
                     } else if (check == 'B') {
                         mapUI.add(barrier[4].getBarrier(), x, y);
                     } else if (check == 'W') {
@@ -56,6 +61,7 @@ public class Map implements Settings {
                         mapUI.add(another.initializeOnTank(), x, y);
                         currentPlaceOFTheAnotherTank[0] = y;
                         currentPlaceOFTheAnotherTank[1] = x;
+                        spawnPointQ = new Position(x, y);
                     }
                     else {
                         mapUI.add(barrier[0].getBarrier(), x, y);
@@ -72,17 +78,21 @@ public class Map implements Settings {
             throw new InvalidMapException("Map size can not be zero");
         }
     }
-    public void setHealth(int health){
-        labelOfTheHealth.setText("Health: " + health);
-        labelOfTheHealth.setPadding(new Insets(20, 20, 20, 20));
-
+    public void setHealthP(int health){
+        labelOfTheHealthP.setText("Health of the Player1: " + health);
+        labelOfTheHealthP.setPadding(new Insets(20, 20, 20, 20));
     }
+    public void setHealthQ(int health){
+        labelOfTheHealthQ.setText("Health of the Player2: " + health);
+        labelOfTheHealthQ.setPadding(new Insets(20, 20, 20, 20));
+    }
+
 
     public HBox Run(){
         HBox hBox = new HBox();
         VBox vBox = new VBox();
         vBox.setStyle("-fx-background-color: #7F7F7FFF");
-        vBox.getChildren().add(labelOfTheHealth);
+        vBox.getChildren().addAll(labelOfTheHealthP, labelOfTheHealthQ);
         hBox.getChildren().addAll(pane, vBox);
         return hBox;
     }
@@ -185,14 +195,16 @@ public class Map implements Settings {
         return this.N;
     }
     public void delete(Position position){
-        mapUI.add(barrier[0].getBarrier(), position.getX(), position.getY());
-        if(NxN[position.getY()][position.getX()] == 'P'){
-            Pdestroyed = true;
+        if(NxN[position.getY()][position.getX()] != 'S'){
+            mapUI.add(barrier[0].getBarrier(), position.getX(), position.getY());
+            if(NxN[position.getY()][position.getX()] == 'P'){
+                Pdestroyed = true;
+            }
+            if(NxN[position.getY()][position.getX()] == 'Q'){
+                Qdestroyed = true;
+            }
+            NxN[position.getY()][position.getX()] = '0';
         }
-        if(NxN[position.getY()][position.getX()] == 'Q'){
-            Qdestroyed = true;
-        }
-        NxN[position.getY()][position.getX()] = '0';
     }
     public boolean isQdestroyed(){
         return Qdestroyed;
@@ -208,21 +220,12 @@ public class Map implements Settings {
         return NxN[y][x];
     }
 
-    public char getValueA(int y, int x) {
-        return NxN[y][x];
-    }
-    public void print() {
+    public  void print() {
         for (char[] chars : NxN) {
             for (char aChar : chars) {
                 System.out.print(aChar + " ");
             }
             System.out.println();
         }
-    }
-    public char mapGetValueAtForAnother(int y, int x){
-        return NxN[y][x];
-    }
-    public void setValue(Position position, char a){
-        NxN[position.getY()][position.getX()] = a;
     }
 }

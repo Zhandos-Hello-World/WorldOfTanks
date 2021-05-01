@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Server extends Application {
@@ -58,6 +59,7 @@ public class Server extends Application {
                     Socket socket = serverSocket.accept();
                     inputFromClient = new DataInputStream(socket.getInputStream());
                     outputStream = new DataOutputStream(socket.getOutputStream());
+                    System.out.println("Server started " + new Date());
                     send();
                     while(true){
                         x = inputFromClient.readInt();
