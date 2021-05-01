@@ -1,25 +1,28 @@
 package com.company.GUI.Bullet;
-
+import com.company.GUI.Barier.Barrier;
+import com.company.GUI.Barier.Null;
+import com.company.GUI.Settings;
 import com.company.GUI.Tanks.CustomRectangle;
 import com.company.GUI.Tanks.Tank;
 import com.company.GUI.Tanks.WhiteTank;
 import com.company.InvalidMapException;
 import com.company.Map;
 import com.company.Position;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import javafx.animation.PathTransition;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-
-public class Bullet {
+public class Bullet implements Settings {
     CustomRectangle black;
     CustomRectangle colorOfTheBullet;
     int pixel;
     private Position positionOfTheBullet;
     private static boolean check = false;
     private char goal;
-    private GridPane bullet = new GridPane();
+    private GridPane bullet;
+    private Barrier n = new Null();
     public Bullet(char goal){
         //for get pixel
         Tank tank = new WhiteTank();
@@ -31,15 +34,44 @@ public class Bullet {
     public boolean checkBarrier(Map map, int rotate, Position position) throws InvalidMapException {
         this.positionOfTheBullet = position;
         if(rotate == 0){
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.2), e->{
-                if(position.getX() < map.getSize()){
-                    map.getMapUI().getChildren().remove(initializeOnBullet());
-                    map.getMapUI().add(initializeOnBullet(),position.getX(), position.getY());
-                    position.setX(position.getX()+1);
+            int endX = map.getSize() * 2 * getPixel() * getSizeWidth();
+            int index = 0;
+            for(int i = positionOfTheBullet.getX(); i < map.getSize(); i++){
+                if(map.getValueAt(positionOfTheBullet.getY(), i) == 'B' || map.getValueAt(positionOfTheBullet.getY(), i) == this.goal){
+                    positionOfTheBullet = new Position(i, positionOfTheBullet.getY());
+                    check = true;
+                    index = i;
+                    break;
                 }
-            }));
-            timeline.setCycleCount(20);
-            timeline.play();
+                else if(map.getValueAt(positionOfTheBullet.getY(), i) == 'S'){
+                    check = false;
+                    index = i;
+                    break;
+                }
+            }
+            if(check){
+                endX = 2 * getSizeWidth() * getPixel() * positionOfTheBullet.getX();
+            }
+            initializeOnBullet();
+            System.out.println(positionOfTheBullet.getX() * 2 * getPixel() * getSizeWidth());
+            System.out.println(endX);
+            System.out.println();
+            Line line = new Line(position.getX() * 2 * getPixel() * getSizeWidth(), position.getY() * 2 * getPixel() * getSizeHeight() + (getSizeHeight() * getPixel()), endX, positionOfTheBullet.getY() * 2 * getPixel() * getSizeHeight() + (getSizeHeight() * getPixel()));
+            line.setVisible(false);
+            PathTransition animationOfTheTank = new PathTransition();
+            Rectangle rectangle = new Rectangle(0, 0, 5, 5);
+            rectangle.setFill(Color.ORANGE);
+            bullet.setRotate(90);
+            animationOfTheTank.setDuration(Duration.millis(400));
+            animationOfTheTank.setPath(line);
+            animationOfTheTank.setNode(bullet);
+            animationOfTheTank.play();
+            Map.pane.getChildren().addAll(line, bullet);
+            animationOfTheTank.setOnFinished(event -> {
+                Map.pane.getChildren().remove(bullet);
+                bullet.setGridLinesVisible(false);
+                bullet.setVisible(false);
+            });
         }
         else if(rotate == 1){
             for(int i = positionOfTheBullet.getX(); i >= 0; i--){
@@ -97,7 +129,8 @@ public class Bullet {
     }
 
 
-    public GridPane initializeOnBullet(){
+    public void initializeOnBullet(){
+        bullet =  new GridPane();
         for(int i = 0; i < 14; i++){
             for(int j = 0; j < 13; j++){
                 if(i < 3){
@@ -105,7 +138,6 @@ public class Bullet {
                         bullet.add(colorOfTheBullet.get(), j, i);
                     }
                     else{
-                        bullet.add(black.get(), j, i);
                     }
                 }
                 else if(i >= 3 && i <= 9){
@@ -113,14 +145,11 @@ public class Bullet {
                         bullet.add(colorOfTheBullet.get(), j, i);
                     }
                     else{
-                        bullet.add(black.get(), j, i);
                     }
                 }
                 else{
-                    bullet.add(black.get(), j, i);
                 }
             }
         }
-        return bullet;
     }
 }

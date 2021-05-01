@@ -1,5 +1,4 @@
 package com.company.offlineTwoPlayers;
-
 import com.company.InvalidMapException;
 import com.company.Map;
 import com.company.Position;

@@ -31,30 +31,6 @@ public class SecondPlayer extends AnotherPlayers implements Settings {
         this.shadow = new CustomRectangle(this.shadowColor, getPixel());
     }
     public void setColor(int i){
-        if(i == 0){
-            this.mirrorColor = new Color(.91,.91,.58, 1);
-            this.originalColor = new Color(.91,.61,.13, 1);
-            this.shadowColor = new Color(.42,.42,0, 1);
-        }
-        else if(i == 1){
-            this.mirrorColor = new Color(1,1,1, 1);
-            this.originalColor = new Color(.71,.19,.13, 1);
-            this.shadowColor = new Color(.35,0,.48, 1);
-            this.mirror = new CustomRectangle(this.mirrorColor, getPixel());
-        }
-        else if(i == 2){
-            this.mirrorColor = new Color(.71,.97,.81, 1);
-            this.originalColor = new Color(0,.55,.19, 1);
-            this.shadowColor = new Color(0,.32,0, 1);
-        }
-        else if(i == 3){
-            this.mirrorColor = new Color(1,1,1, 1);
-            this.originalColor = new Color(.42,.42,.42, 1);
-            this.shadowColor = new Color(0,.17,.20, 1);
-        }
-        this.mirror = new CustomRectangle(this.mirrorColor, getPixel());
-        this.original = new CustomRectangle(this.originalColor, getPixel());
-        this.shadow = new CustomRectangle(this.shadowColor, getPixel());
     }
 
 

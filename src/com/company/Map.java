@@ -8,10 +8,12 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import java.util.Scanner;
 public class Map implements Settings {
+    public static Pane pane;
     private int N;
     private static char[][] NxN;
     private static GridPane mapUI;
@@ -58,6 +60,7 @@ public class Map implements Settings {
                     else {
                         mapUI.add(barrier[0].getBarrier(), x, y);
                     }
+                    pane = new Pane(mapUI);
                 } else {
                     throw new InvalidMapException();
                 }
@@ -80,7 +83,7 @@ public class Map implements Settings {
         VBox vBox = new VBox();
         vBox.setStyle("-fx-background-color: #7F7F7FFF");
         vBox.getChildren().add(labelOfTheHealth);
-        hBox.getChildren().addAll(mapUI, vBox);
+        hBox.getChildren().addAll(pane, vBox);
         return hBox;
     }
 
@@ -90,6 +93,9 @@ public class Map implements Settings {
 
     public void setMapUI(GridPane mapUI) {
         Map.mapUI = mapUI;
+    }
+    public char[][] returnNxN(){
+        return NxN;
     }
 
     public void setCurrentPosition(Position position) {
@@ -201,6 +207,10 @@ public class Map implements Settings {
         }
         return NxN[y][x];
     }
+
+    public char getValueA(int y, int x) {
+        return NxN[y][x];
+    }
     public void print() {
         for (char[] chars : NxN) {
             for (char aChar : chars) {
@@ -208,5 +218,11 @@ public class Map implements Settings {
             }
             System.out.println();
         }
+    }
+    public char mapGetValueAtForAnother(int y, int x){
+        return NxN[y][x];
+    }
+    public void setValue(Position position, char a){
+        NxN[position.getY()][position.getX()] = a;
     }
 }

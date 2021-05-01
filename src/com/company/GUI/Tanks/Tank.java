@@ -24,7 +24,6 @@ abstract public class Tank extends MyPlayer implements Settings {
     public GridPane caterpillarLeft() {
         GridPane caterpillarLeft = new GridPane();
         caterpillarLeft.setStyle("-fx-background-color: black; -fx-color-label-visible: true");
-
         caterpillarLeft.setPadding(new Insets(0, 0, 0, 0));
 
         CustomRectangle black = new CustomRectangle(new Color(0, 0, 0, 1), getPixel());
