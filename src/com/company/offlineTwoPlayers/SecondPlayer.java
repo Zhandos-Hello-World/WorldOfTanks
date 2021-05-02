@@ -43,7 +43,6 @@ public class SecondPlayer extends AnotherPlayers implements Settings {
     }
 
 
-
     public GridPane caterpillarLeft() {
         GridPane caterpillarLeft = new GridPane();
         caterpillarLeft.setStyle("-fx-background-color: black; -fx-color-label-visible: true");
@@ -286,6 +285,7 @@ public class SecondPlayer extends AnotherPlayers implements Settings {
         }
     }
     public void fire(){
+        setMap(map);
         if(!map.isQdestroyed()) {
             try{
                 if(canR){
@@ -309,5 +309,10 @@ public class SecondPlayer extends AnotherPlayers implements Settings {
                 //
             }
         }
+    }
+    public void defaultValue(){
+        cannotRLUD();
+        canU = true;
+        pane.setRotate(0);
     }
 }

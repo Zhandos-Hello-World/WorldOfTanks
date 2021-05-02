@@ -5,11 +5,9 @@ abstract public class MyPlayer implements Player{
     protected char[][]NxN;
     protected int x = 0;
     protected int y = 0;
-    protected static int health = 3;
     @Override
     public void setMap(Map map) {
         this.map = map;
-        map.setHealthP(health);
         NxN = new char[map.getSize()][map.getSize()];
         try{
             for(int i = 0; i < map.getSize(); i++){
@@ -47,6 +45,7 @@ abstract public class MyPlayer implements Player{
     @Override
     public void moveRight() {
         setMap(map);
+        repoint();
         if(((map.getSize() > x + 1) && (NxN[y][x + 1] == '0' || NxN[y][x + 1] == 'T'))){
             if(NxN[y][x + 1] == '0'){
                 NxN[y][x] = '0';
@@ -67,6 +66,7 @@ abstract public class MyPlayer implements Player{
     @Override
     public void moveLeft() {
         setMap(map);
+        repoint();
         if(!(-1 == x - 1) && (NxN[y][x - 1] == '0' || NxN[y][x - 1] == 'T')){
             if(NxN[y][x - 1] == '0'){
                 NxN[y][x] = '0';
@@ -87,6 +87,7 @@ abstract public class MyPlayer implements Player{
     @Override
     public void moveUp() {
         setMap(map);
+        repoint();
         if(!(-1 == y - 1) && (NxN[y - 1][x] == '0' || NxN[y - 1][x] == 'T')) {
             if(NxN[y - 1][x] == '0'){
                 NxN[y][x] = '0';
@@ -107,6 +108,7 @@ abstract public class MyPlayer implements Player{
     @Override
     public void moveDown() {
         setMap(map);
+        repoint();
         if((map.getSize() > y + 1) && (NxN[y + 1][x] == '0' || NxN[y + 1][x] == 'T')){
             if (NxN[y + 1][x] == '0') {
                 NxN[y][x] = '0';
@@ -123,9 +125,9 @@ abstract public class MyPlayer implements Player{
             }
         }
     }
-
     @Override
     public Position getPosition() {
         return new Position(x, y);
     }
+    public abstract void defaultValue();
 }

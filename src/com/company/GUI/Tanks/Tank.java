@@ -263,6 +263,7 @@ abstract public class Tank extends MyPlayer implements Settings {
     }
     @Override
     public void fire(){
+        setMap(map);
         if(!map.isPdestroyed()) {
             try{
                 if(canR){
@@ -286,5 +287,10 @@ abstract public class Tank extends MyPlayer implements Settings {
                 //
             }
         }
+    }
+    public void defaultValue(){
+        cannotRLUD();
+        canU = true;
+        pane.setRotate(0);
     }
 }

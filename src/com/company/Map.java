@@ -8,6 +8,7 @@ import com.company.GUI.Tanks.WhiteTank;
 import com.company.GUI.Tanks.YellowTank;
 import com.company.offlineTwoPlayers.SecondPlayer;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -34,6 +35,10 @@ public class Map implements Settings {
     private boolean Pdestroyed = false;
     private static Position spawnPointQ;
     private static Position spawnPointP;
+    private static int healthQ = 3;
+    private static int healthP = 3;
+    VBox messageAboutGame;
+
 
     Map(Scanner scanner, GridPane mapUI) throws InvalidMapException {
         setMapUI(mapUI);
@@ -72,6 +77,8 @@ public class Map implements Settings {
                     pane = new Pane(mapUI);
                     pane.setStyle("-fx-background-color: #7F7F7FFF");
                     pane.setPadding(new Insets(5, 5, 5, 5));
+                    setHealthP(healthP);
+                    setHealthQ(healthQ);
                 } else {
                     throw new InvalidMapException();
                 }
@@ -105,15 +112,11 @@ public class Map implements Settings {
 
     public HBox Run(){
         HBox hBox = new HBox();
-        VBox vBox = new VBox();
-        vBox.setStyle("-fx-background-color: #7F7F7FFF");
-        vBox.getChildren().addAll(labelOfTheHealthP, labelOfTheHealthQ);
-        hBox.getChildren().addAll(pane, vBox);
+        messageAboutGame = new VBox();
+        messageAboutGame.setStyle("-fx-background-color: #7F7F7FFF");
+        messageAboutGame.getChildren().addAll(labelOfTheHealthP, labelOfTheHealthQ);
+        hBox.getChildren().addAll(pane, messageAboutGame);
         return hBox;
-    }
-
-    public GridPane getMapUI() {
-        return mapUI;
     }
 
     public void setMapUI(GridPane mapUI) {
@@ -204,24 +207,72 @@ public class Map implements Settings {
         }
     }
 
-    public void bulletMove(Position pos, GridPane gp){
-        mapUI.add(gp, currentPlaceOFTheAnotherTank[1], currentPlaceOFTheAnotherTank[0]);
-    }
 
     public int getSize() {
         return this.N;
     }
     public void delete(Position position){
         if(NxN[position.getY()][position.getX()] != 'S'){
-            mapUI.add(barrier[0].getBarrier(), position.getX(), position.getY());
             if(NxN[position.getY()][position.getX()] == 'P'){
-                Pdestroyed = true;
+                healthP-=1;
+                if(healthP <= 0){
+                    Pdestroyed = true;
+                    NxN[spawnPointP.getY()][spawnPointP.getX()] = '0';
+                    NxN[position.getY()][position.getX()] = '0';
+                    setHealthP(healthP);
+                    messageAboutGame.getChildren().add(new Label("Player 2 is won"));
+                    Button quit = new Button("Quit");
+                    messageAboutGame.getChildren().add(quit);
+                    quit.setOnAction(e -> System.exit(1));
+                    mapUI.add(barrier[0].getBarrier(), position.getX(), position.getY());
+                    mapUI.add(barrier[0].getBarrier(), spawnPointP.getX(), spawnPointP.getY());
+                }
+                else{
+                    NxN[position.getY()][position.getX()] = '0';
+                    mapUI.add(barrier[0].getBarrier(), position.getX(), position.getY());
+                    tank.defaultValue();
+                    setHealthP(healthP);
+                    Pdestroyed = false;
+                    NxN[spawnPointP.getY()][spawnPointP.getX()] = 'P';
+                    mapUI.add(tank.initializeOnTank(), spawnPointP.getX(), spawnPointP.getY());
+                    currentPlaceOfTank[0] = spawnPointP.getY();
+                    currentPlaceOfTank[1] = spawnPointP.getX();
+                }
             }
-            if(NxN[position.getY()][position.getX()] == 'Q'){
-                Qdestroyed = true;
+            else if(NxN[position.getY()][position.getX()] == 'Q'){
+                healthQ-=1;
+                if(healthQ <= 0){
+                    Qdestroyed = true;
+                    NxN[spawnPointQ.getY()][spawnPointQ.getX()] = '0';
+                    NxN[position.getY()][position.getX()] = '0';
+                    mapUI.add(barrier[0].getBarrier(), position.getX(), position.getY());
+                    mapUI.add(barrier[0].getBarrier(), spawnPointP.getX(), spawnPointQ.getY());
+                    setHealthQ(healthQ);
+
+                    messageAboutGame.getChildren().add(new Label("Player 1 is won"));
+                    Button quit = new Button("Quit");
+                    messageAboutGame.getChildren().add(quit);
+                    quit.setOnAction(e -> System.exit(1));
+                }
+                else{
+                    NxN[position.getY()][position.getX()] = '0';
+                    mapUI.add(barrier[0].getBarrier(), position.getX(), position.getY());
+                    another.defaultValue();
+                    setHealthQ(healthQ);
+                    Qdestroyed = false;
+                    NxN[spawnPointQ.getY()][spawnPointQ.getX()] = 'Q';
+                    mapUI.add(another.initializeOnTank(), spawnPointQ.getX(), spawnPointQ.getY());
+                    currentPlaceOFTheAnotherTank[0] = spawnPointQ.getY();
+                    currentPlaceOFTheAnotherTank[1] = spawnPointQ.getX();
+                }
             }
-            NxN[position.getY()][position.getX()] = '0';
+            else{
+                NxN[position.getY()][position.getX()] = '0';
+                mapUI.add(barrier[0].getBarrier(), position.getX(), position.getY());
+            }
         }
+        print();
+        System.out.println();
     }
     public boolean isQdestroyed(){
         return Qdestroyed;
