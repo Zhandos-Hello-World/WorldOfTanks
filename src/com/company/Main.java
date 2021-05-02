@@ -59,11 +59,16 @@ public class Main extends Application {
     private DataOutputStream outputStream = null;
     private Map map;
     Button server_button;
+    private int serverPort = 8345;
 
     //for Client
-    Button client_button_start = new Button("Connecting");
+    Button client_button_start = new Button("Connect");
     DataOutputStream toServer = null;
     DataInputStream fromServer = null;
+    private int clientPort;
+    private TextField portTextField;
+    Label invalidPortNameMessage = new Label();
+
 
     public void mainScreen(){
         Button[]buttonsQ = {play, settings, exit};
@@ -359,7 +364,6 @@ public class Main extends Application {
 
         });
     }
-
     public void choicesButtons(){
         buttons.getChildren().clear();
         Button[]choicesTypeOfTheGame = {single, multiplayerOn, multiplayerOf, cancel};
@@ -379,14 +383,12 @@ public class Main extends Application {
             onlineChoice();
         });
     }
-
-
     public void onlineChoice(){
         Label text = new Label("Your password for connect using to WI-FI:");
         text.setFont(Font.font("Calibri Light", FontWeight.BLACK, FontPosture.ITALIC, 30));
         text.setTextFill(new Color(1, 1, 1, 1));
         text.setWrapText(true);
-        Button client_button = new Button("Сonnect");
+        Button client_button = new Button("Connect");
         server_button = new Button("Create");
         Button cancel = new Button("cancel");
         cancel.getStylesheets().add("buttonsDesign.css");
@@ -405,8 +407,16 @@ public class Main extends Application {
 
 
         client_button.setOnAction(E -> {
-
+            portTextField = new TextField();
+            Button cancel1 = new Button("cancel");
+            client_button_start.getStylesheets().add("buttonsDesign.css");
+            cancel1.getStylesheets().add("buttonsDesign.css");
+            invalidPortNameMessage.setTextFill(new Color(1, 0, 0, 1));
+            buttons.getChildren().clear();
+            buttons.getChildren().addAll(portTextField, client_button_start, cancel1, invalidPortNameMessage);
         });
+
+
         server_button.setOnAction(event -> {
             Button choiceOfTheMap = new Button("Map");
             choiceOfTheMap.setMinSize(200, 100);
@@ -700,7 +710,7 @@ public class Main extends Application {
                         }
                     });
                     try{
-                        ServerSocket serverSocket = new ServerSocket(723);
+                        ServerSocket serverSocket = new ServerSocket(serverPort);
                         new Thread(() -> {
                             try {
                                 Socket socket = serverSocket.accept();
@@ -745,33 +755,41 @@ public class Main extends Application {
             }
         });
         client_button_start.setOnAction(event -> {
-            try {
-                stage.close();
-                Socket socket = new Socket("localhost", 8000);
-                fromServer = new DataInputStream(socket.getInputStream());
-                toServer = new DataOutputStream(socket.getOutputStream());
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-            Scene scene = new Scene(new Pane());
-            scene.setOnKeyPressed(e -> {
+            clientPort = Integer.parseInt(portTextField.getText());
+            if(clientPort == serverPort){
                 try {
-                    switch (e.getCode()){
-                        case RIGHT: toServer.writeInt(0);break;
-                        case LEFT: toServer.writeInt(1);break;
-                        case DOWN: toServer.writeInt(2);break;
-                        case UP: toServer.writeInt(3);break;
-                        case SPACE:toServer.writeInt(4);break;
-                        default:break;
+                    stage.close();
+                    Socket socket = new Socket("localhost", clientPort);
+                    fromServer = new DataInputStream(socket.getInputStream());
+                    toServer = new DataOutputStream(socket.getOutputStream());
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Pane pane = new Pane();
+                pane.setStyle("-fx-background-color: black");
+                Scene scene = new Scene(pane, 300,300);
+                scene.setOnKeyPressed(e -> {
+                    try {
+                        switch (e.getCode()){
+                            case RIGHT: toServer.writeInt(0);break;
+                            case LEFT: toServer.writeInt(1);break;
+                            case DOWN: toServer.writeInt(2);break;
+                            case UP: toServer.writeInt(3);break;
+                            case SPACE:toServer.writeInt(4);break;
+                            default:break;
+                        }
                     }
-                }
-                catch (IOException ex){
-                    ex.printStackTrace();
-                }
-            });
-            stage.setScene(scene);
-            stage.show();
+                    catch (IOException ex){
+                        ex.printStackTrace();
+                    }
+                });
+                stage.setScene(scene);
+                stage.show();
+            }
+            else{
+                invalidPortNameMessage.setText("Port is not correct");
+            }
         });
     }
     public static void main(String[]args){
