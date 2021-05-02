@@ -12,7 +12,6 @@ import javafx.animation.PathTransition;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 public class Bullet implements Settings {
     CustomRectangle black;
@@ -24,6 +23,7 @@ public class Bullet implements Settings {
     private GridPane bullet;
     private Barrier n = new Null();
     private boolean canFire = true;
+    private Map map;
     public Bullet(char goal){
         //for get pixel
         Tank tank = new WhiteTank();
@@ -32,7 +32,20 @@ public class Bullet implements Settings {
         colorOfTheBullet = new CustomRectangle(new Color(.68,.68,.68, 1), pixel);
         this.goal = goal;
     }
+    public boolean checkAddition() throws InvalidMapException{
+        if(map.getValueAt(positionOfTheBullet.getY(), positionOfTheBullet.getX()) == 'B' || map.getValueAt(positionOfTheBullet.getY(), positionOfTheBullet.getX()) == this.goal){
+            return true;
+        }
+        else if(map.getValueAt(positionOfTheBullet.getY(), positionOfTheBullet.getX()) == 'S'){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     public void checkBarrier(Map map, int rotate, Position position) throws InvalidMapException {
+        this.map = map;
         this.positionOfTheBullet = position;
         if(rotate == 0 && canFire){
             int endX = map.getSize() * 2 * getPixel() * getSizeWidth();
@@ -63,17 +76,20 @@ public class Bullet implements Settings {
             animationOfTheTank.play();
             Map.pane.getChildren().addAll(line, bullet);
             canFire = false;
-            System.out.println(positionOfTheBullet.getX() + ", " + positionOfTheBullet.getY());
             animationOfTheTank.setOnFinished(event -> {
                 canFire = true;
                 bullet.setVisible(false);
-                if(check){
-                    map.delete(positionOfTheBullet);
-                    check = false;
+                try {
+                    if(check && !position.equals(positionOfTheBullet) && checkAddition()){
+                        map.delete(positionOfTheBullet);
+                        check = false;
+                    }
+                } catch (InvalidMapException e) {
+                    e.printStackTrace();
                 }
             });
         }
-        else if(rotate == 1 && canFire){
+        else if(rotate == 1 && canFire && positionOfTheBullet.getX() != 0){
             int endX = 0;
             for(int i = positionOfTheBullet.getX(); i >= 0; i--){
                 if(map.getValueAt(positionOfTheBullet.getY(), i) == 'B' || map.getValueAt(positionOfTheBullet.getY(), i) == goal){
@@ -88,7 +104,7 @@ public class Bullet implements Settings {
                 }
             }
             if(check && !position.equals(positionOfTheBullet)){
-                endX = 2 * getSizeWidth() * getPixel() * positionOfTheBullet.getX() + getSizeWidth();
+                endX = 2 * getSizeWidth() * getPixel() * positionOfTheBullet.getX() + getSizeWidth() - 5;
             }
             initializeOnBullet();
             Line line = new Line(position.getX() * 2 * getPixel() * getSizeWidth() -   getSizeWidth(), position.getY() * 2 * getPixel() * getSizeHeight() + (getSizeHeight() * getPixel()), endX, positionOfTheBullet.getY() * 2 * getPixel() * getSizeHeight() + (getSizeHeight() * getPixel()));
@@ -101,13 +117,16 @@ public class Bullet implements Settings {
             animationOfTheTank.play();
             Map.pane.getChildren().addAll(line, bullet);
             canFire = false;
-            System.out.println(positionOfTheBullet.getX() + ", " + positionOfTheBullet.getY());
             animationOfTheTank.setOnFinished(event -> {
                 canFire = true;
                 bullet.setVisible(false);
-                if(check && !position.equals(positionOfTheBullet)){
-                    map.delete(positionOfTheBullet);
-                    check = false;
+                try {
+                    if(check && !position.equals(positionOfTheBullet) && checkAddition()){
+                        map.delete(positionOfTheBullet);
+                        check = false;
+                    }
+                } catch (InvalidMapException e) {
+                    e.printStackTrace();
                 }
             });
 
@@ -140,13 +159,16 @@ public class Bullet implements Settings {
             animationOfTheTank.play();
             Map.pane.getChildren().addAll(line, bullet);
             canFire = false;
-            System.out.println(positionOfTheBullet.getX() + ", " + positionOfTheBullet.getY());
             animationOfTheTank.setOnFinished(event -> {
                 canFire = true;
                 bullet.setVisible(false);
-                if(check && !position.equals(positionOfTheBullet)){
-                    map.delete(positionOfTheBullet);
-                    check = false;
+                try {
+                    if(check && !position.equals(positionOfTheBullet) && checkAddition()){
+                        map.delete(positionOfTheBullet);
+                        check = false;
+                    }
+                } catch (InvalidMapException e) {
+                    e.printStackTrace();
                 }
             });
         }
@@ -178,17 +200,20 @@ public class Bullet implements Settings {
             animationOfTheTank.play();
             Map.pane.getChildren().addAll(line, bullet);
             canFire = false;
-            System.out.println(positionOfTheBullet.getX() + ", " + positionOfTheBullet.getY());
             animationOfTheTank.setOnFinished(event -> {
                 canFire = true;
                 bullet.setVisible(false);
-                if(check && !position.equals(positionOfTheBullet)){
-                    map.delete(positionOfTheBullet);
-                    check = false;
+                try {
+                    if(check && !position.equals(positionOfTheBullet) && checkAddition()){
+                        map.delete(positionOfTheBullet);
+                        check = false;
+                    }
+                } catch (InvalidMapException e) {
+                    e.printStackTrace();
                 }
             });
         }
-    }
+        }
 
 
     public void initializeOnBullet(){

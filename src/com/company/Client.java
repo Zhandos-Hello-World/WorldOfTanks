@@ -16,7 +16,7 @@ public class Client extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            Socket socket = new Socket("192.168.100.4", 8000);
+            Socket socket = new Socket("localhost", 723);
             fromServer = new DataInputStream(socket.getInputStream());
             toServer = new DataOutputStream(socket.getOutputStream());
         }

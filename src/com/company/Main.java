@@ -8,12 +8,12 @@ import com.company.GUI.Tanks.YellowTank;
 import com.company.PreviousTanks.*;
 import com.company.offlineTwoPlayers.SecondPlayer;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -23,6 +23,10 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -37,7 +41,7 @@ public class Main extends Application {
     private Button cancel = new Button("cancel");
     private VBox buttons = new VBox();
     private BorderPane Pane = new BorderPane();
-    private Button start = new Button("Start");
+    private Button startOfFlineMultiplayer = new Button("Start");
     File file = new File("src\\com\\company\\Maps\\map1.txt");
     Color []colors = {new Color(.91,.61,.13, 1), new Color(.35,0,.48, 1),
     new Color(0,.32,0, 1), new Color(1,1,1, 1)};
@@ -47,6 +51,20 @@ public class Main extends Application {
     Tank []tanks1 = {new YellowTankP(), new RedTankP(), new GreenTankP(), new WhiteTankP()};
     Tank []tanks2 = {new YellowTankP(), new RedTankP(), new GreenTankP(), new WhiteTankP()};
     Label messageInvalid = new Label();
+    private static boolean onlineOrOffline = false;
+    //for Server
+    private Button startOnlineMultiplayer = new Button("start");
+    private int x = 3;
+    private DataInputStream inputFromClient = null;
+    private DataOutputStream outputStream = null;
+    private Map map;
+    Button server_button;
+
+    //for Client
+    Button client_button_start = new Button("Connecting");
+    DataOutputStream toServer = null;
+    DataInputStream fromServer = null;
+
     public void mainScreen(){
         Button[]buttonsQ = {play, settings, exit};
         for(int i = 0; i < buttonsQ.length; i++){
@@ -76,7 +94,7 @@ public class Main extends Application {
         Button left2 = new Button("<");
         Button right2 = new Button(">");
         Button cancel = new Button("cancel");
-        Button[] instance = {left1, right1, left2, right2, cancel, start};
+        Button[] instance = {left1, right1, left2, right2, cancel, startOfFlineMultiplayer};
         for(int i = 0; i < instance.length; i++){
             if(i >= instance.length - 2){
                 instance[i].setMinSize(200, 100);
@@ -103,13 +121,14 @@ public class Main extends Application {
         buttons.add(flowPane1, 0, 3);
         buttons.add(flowPane2, 1, 3);
         buttons.add(cancel, 0, 4);
-        buttons.add(start, 1, 4);
+        buttons.add(startOfFlineMultiplayer , 1, 4);
         buttons.add(messageInvalid, 0, 5);
 
         buttons.setPadding(new Insets(130, 200, 0, 200));
         Pane.setCenter(buttons);
 
         choiceOfTheMap.setOnAction(e -> {
+            onlineOrOffline = false;
             MapShow();
         });
 
@@ -226,12 +245,118 @@ public class Main extends Application {
         Button saveAndClose = new Button("Save and close");
         saveAndClose.getStylesheets().add("buttonsDesign.css");
         Pane.setBottom(saveAndClose);
-        saveAndClose.setOnAction(e->{
+        saveAndClose.setOnAction(ex->{
             Pane.setBottom(null);
             Pane.setCenter(null);
             Pane.setLeft(null);
             Pane.setRight(null);
-            offlineChoice();
+            if(onlineOrOffline) {
+                Button choiceOfTheMap = new Button("Map");
+                choiceOfTheMap.setMinSize(200, 100);
+                choiceOfTheMap.getStylesheets().add("buttonsDesign.css");
+
+                for (int i = 0; i < labels.length; i++) {
+                    labels[i].setFont(Font.font("Calibri Light", FontWeight.BOLD, FontPosture.ITALIC, 40));
+                    labels[i].setTextFill(new Color(1, 1, 1, 1));
+                    labels[i].setPadding(new Insets(30, 30, 30, 30));
+                }
+                labels[0].setTextFill(colors[choiceOfTheTank1]);
+                labels[1].setTextFill(colors[choiceOfTheTank2]);
+
+                GridPane buttons = new GridPane();
+
+                Button left1 = new Button("<");
+                Button right1 = new Button(">");
+                Button left2 = new Button("<");
+                Button right2 = new Button(">");
+                Button cancel1 = new Button("cancel");
+                Button[] instance = {left1, right1, left2, right2, cancel1, startOnlineMultiplayer};
+                for (int i = 0; i < instance.length; i++) {
+                    if (i >= instance.length - 2) {
+                        instance[i].setMinSize(200, 100);
+                        instance[i].getStylesheets().add("buttonsDesign.css");
+                    } else {
+                        instance[i].setMinSize(100, 100);
+                        instance[i].getStylesheets().add("buttonsDesign.css");
+                    }
+                }
+                cancel1.setMinSize(200, 100);
+                FlowPane flowPane1 = new FlowPane(Orientation.HORIZONTAL);
+                flowPane1.getChildren().addAll(left1, right1);
+
+                FlowPane flowPane2 = new FlowPane(Orientation.HORIZONTAL);
+                flowPane2.getChildren().addAll(left2, right2);
+
+
+                buttons.add(choiceOfTheMap, 1, 0);
+                buttons.add(tanks1[choiceOfTheTank1].initializeOnTank(), 0, 1);
+                buttons.add(tanks2[choiceOfTheTank2].initializeOnTank(), 1, 1);
+                buttons.add(labels[0], 0, 2);
+                buttons.add(labels[1], 1, 2);
+                buttons.add(flowPane1, 0, 3);
+                buttons.add(flowPane2, 1, 3);
+                buttons.add(cancel1, 0, 4);
+                buttons.add(startOnlineMultiplayer, 1, 4);
+                buttons.add(messageInvalid, 0, 5);
+
+                buttons.setPadding(new Insets(130, 200, 0, 200));
+                Pane.setCenter(buttons);
+
+                choiceOfTheMap.setOnAction(e -> {
+                    onlineOrOffline = true;
+                    MapShow();
+                });
+
+                cancel1.setOnAction(e -> {
+                    choicesButtons();
+                });
+
+                left1.setOnAction(e -> {
+                    if (choiceOfTheTank1 == 0) {
+                        choiceOfTheTank1 = 3;
+                    } else {
+                        choiceOfTheTank1 -= 1;
+                    }
+                    buttons.add(tanks1[choiceOfTheTank1].initializeOnTank(), 0, 1);
+                    labels[0].setTextFill(colors[choiceOfTheTank1]);
+                });
+                left2.setOnAction(e -> {
+                    if (choiceOfTheTank2 == 0) {
+                        choiceOfTheTank2 = 3;
+                    } else {
+                        choiceOfTheTank2 -= 1;
+                    }
+                    buttons.add(tanks2[choiceOfTheTank2].initializeOnTank(), 1, 1);
+                    labels[1].setTextFill(colors[choiceOfTheTank2]);
+
+                });
+                right1.setOnAction(e -> {
+                    if (choiceOfTheTank1 == 3) {
+                        choiceOfTheTank1 = 0;
+                    } else {
+                        choiceOfTheTank1 += 1;
+                    }
+                    buttons.add(tanks1[choiceOfTheTank1].initializeOnTank(), 0, 1);
+                    labels[0].setTextFill(colors[choiceOfTheTank1]);
+
+
+                });
+                right2.setOnAction(e -> {
+                    if (choiceOfTheTank2 == 3) {
+                        choiceOfTheTank2 = 0;
+                    } else {
+                        choiceOfTheTank2 += 1;
+                    }
+                    buttons.add(tanks2[choiceOfTheTank2].initializeOnTank(), 1, 1);
+                    labels[1].setTextFill(colors[choiceOfTheTank2]);
+                });
+                Pane.getChildren().clear();
+                Pane.setCenter(buttons);
+            }
+            else{
+                offlineChoice();
+            }
+
         });
     }
 
@@ -262,22 +387,149 @@ public class Main extends Application {
         text.setTextFill(new Color(1, 1, 1, 1));
         text.setWrapText(true);
         Button client_button = new Button("Сonnect");
-        Button server_button = new Button("Create");
+        server_button = new Button("Create");
         Button cancel = new Button("cancel");
         cancel.getStylesheets().add("buttonsDesign.css");
         client_button.setMinSize(300, 100);
         server_button.setMinSize(300, 100);
+        cancel.setMinSize(300, 100);
         client_button.getStylesheets().add("buttonsDesign.css");
         server_button.getStylesheets().add("buttonsDesign.css");
+        cancel.getStylesheets().add("buttonsDesign.css");
 
-        TextArea ta = new TextArea();
+
         buttons.getChildren().clear();
-        buttons.getChildren().addAll(text, client_button, server_button);
+        buttons.getChildren().addAll(text, client_button, server_button, cancel);
+
+        cancel.setOnAction(event -> choicesButtons());
+
+
         client_button.setOnAction(E -> {
+
         });
-        server_button.setOnAction(E -> {
+        server_button.setOnAction(event -> {
+            Button choiceOfTheMap = new Button("Map");
+            choiceOfTheMap.setMinSize(200, 100);
+            choiceOfTheMap.getStylesheets().add("buttonsDesign.css");
+
+            for(int i = 0; i < labels.length; i++){
+                labels[i].setFont(Font.font("Calibri Light", FontWeight.BOLD, FontPosture.ITALIC, 40));
+                labels[i].setTextFill(new Color(1, 1, 1, 1));
+                labels[i].setPadding(new Insets(30, 30, 30, 30));
+            }
+            labels[0].setTextFill(colors[choiceOfTheTank1]);
+            labels[1].setTextFill(colors[choiceOfTheTank2]);
+
+            GridPane buttons = new GridPane();
+
+            Button left1 = new Button("<");
+            Button right1 = new Button(">");
+            Button left2 = new Button("<");
+            Button right2 = new Button(">");
+            Button cancel1 = new Button("cancel");
+            Button[] instance = {left1, right1, left2, right2, cancel1, startOnlineMultiplayer};
+            for(int i = 0; i < instance.length; i++){
+                if(i >= instance.length - 2){
+                    instance[i].setMinSize(200, 100);
+                    instance[i].getStylesheets().add("buttonsDesign.css");
+                }
+                else{
+                    instance[i].setMinSize(100, 100);
+                    instance[i].getStylesheets().add("buttonsDesign.css");
+                }
+            }
+            cancel1.setMinSize(200, 100);
+            FlowPane flowPane1 = new FlowPane(Orientation.HORIZONTAL);
+            flowPane1.getChildren().addAll(left1, right1);
+
+            FlowPane flowPane2 = new FlowPane(Orientation.HORIZONTAL);
+            flowPane2.getChildren().addAll(left2, right2);
+
+
+
+            buttons.add(choiceOfTheMap, 1, 0);
+            buttons.add(tanks1[choiceOfTheTank1].initializeOnTank(), 0, 1);
+            buttons.add(tanks2[choiceOfTheTank2].initializeOnTank(), 1, 1);
+            buttons.add(labels[0], 0, 2);
+            buttons.add(labels[1], 1, 2);
+            buttons.add(flowPane1, 0, 3);
+            buttons.add(flowPane2, 1, 3);
+            buttons.add(cancel1, 0, 4);
+            buttons.add(startOnlineMultiplayer , 1, 4);
+            buttons.add(messageInvalid, 0, 5);
+
+            buttons.setPadding(new Insets(130, 200, 0, 200));
+            Pane.setCenter(buttons);
+
+            choiceOfTheMap.setOnAction(e -> {
+                onlineOrOffline = true;
+                MapShow();
+            });
+
+            cancel1.setOnAction(e -> {
+                choicesButtons();
+            });
+
+            left1.setOnAction(e -> {
+                if(choiceOfTheTank1 == 0){
+                    choiceOfTheTank1 = 3;
+                }
+                else{
+                    choiceOfTheTank1 -= 1;
+                }
+                buttons.add(tanks1[choiceOfTheTank1].initializeOnTank(), 0, 1);
+                labels[0].setTextFill(colors[choiceOfTheTank1]);
+            });
+            left2.setOnAction(e -> {
+                if(choiceOfTheTank2 == 0){
+                    choiceOfTheTank2 = 3;
+                }
+                else{
+                    choiceOfTheTank2 -= 1;
+                }
+                buttons.add(tanks2[choiceOfTheTank2].initializeOnTank(), 1, 1);
+                labels[1].setTextFill(colors[choiceOfTheTank2]);
+
+            });
+            right1.setOnAction(e -> {
+                if(choiceOfTheTank1 == 3){
+                    choiceOfTheTank1 = 0;
+                }
+                else{
+                    choiceOfTheTank1 += 1;
+                }
+                buttons.add(tanks1[choiceOfTheTank1].initializeOnTank(), 0, 1);
+                labels[0].setTextFill(colors[choiceOfTheTank1]);
+
+
+            });
+            right2.setOnAction(e -> {
+                if(choiceOfTheTank2 == 3){
+                    choiceOfTheTank2 = 0;
+                }
+                else{
+                    choiceOfTheTank2 += 1;
+                }
+                buttons.add(tanks2[choiceOfTheTank2].initializeOnTank(), 1, 1);
+                labels[1].setTextFill(colors[choiceOfTheTank2]);
+            });
+
+
+
+
         });
     }
+
+    //method of the server
+    public void send() throws IOException{
+        outputStream.writeInt(map.getSize());
+        for(int i = 0; i < map.getSize(); i++){
+            for(int j = 0; j < map.getSize(); j++){
+                outputStream.writeChar(map.returnNxN()[i][j]);
+            }
+        }
+    }
+
     public void singlePlayer(){
         GridPane levels = new GridPane();
         Label textOfLevel = new Label("Levels");
@@ -355,7 +607,9 @@ public class Main extends Application {
         });
 
 
-        start.setOnAction(e -> {
+        startOfFlineMultiplayer.setOnAction(e -> {
+            Map.setColorP(choiceOfTheTank1);
+            Map.setColorQ(choiceOfTheTank2);
             if(choiceOfTheTank1 == choiceOfTheTank2){
                 messageInvalid.setText("You cannot choose the same color of equipment");
                 messageInvalid.setWrapText(true);
@@ -368,7 +622,6 @@ public class Main extends Application {
                     stage.close();
                     Stage primaryStage = new Stage();
                     Player []myPlayer = {new YellowTank(), new RedTank(),  new GreenTank(),  new WhiteTank()};
-
                     GridPane gp = new GridPane();
                     Scanner scanner = new Scanner(file);
                     Map map = new Map(scanner, gp);
@@ -405,6 +658,120 @@ public class Main extends Application {
                 }
             }
 
+        });
+        startOnlineMultiplayer.setOnAction(event -> {
+            Map.setColorP(choiceOfTheTank1);
+            Map.setColorQ(choiceOfTheTank2);
+            if(choiceOfTheTank1 == choiceOfTheTank2){
+                messageInvalid.setText("You cannot choose the same color of equipment");
+                messageInvalid.setWrapText(true);
+                messageInvalid.setTextFill(new Color(1, 0, 0, 1));
+            }
+            else{
+                stage.close();
+                int choiceOfTheTank1 = 3;
+                GridPane gp = new GridPane();
+                Scanner scanner = null;
+                try {
+                    scanner = new Scanner(new File("src\\com\\company\\Level\\mapFirst.txt"));
+                    Stage primaryStage = new Stage();
+                    Player []myPlayer = {new YellowTank(), new RedTank(),  new GreenTank(),  new WhiteTank()};
+                    map = new Map(scanner, gp);
+                    Game game = new Game(map);
+                    Player player = myPlayer[choiceOfTheTank1];
+                    SecondPlayer secondPlayer = new SecondPlayer();
+                    secondPlayer.setColor(choiceOfTheTank1);
+                    game.addPlayer(player);
+                    game.addPlayer(secondPlayer);
+                    HBox hBox = map.Run();
+                    Scene scene = new Scene(hBox);
+                    primaryStage.setScene(scene);
+                    primaryStage.setResizable(false);
+                    primaryStage.show();
+                    scene.setOnKeyPressed(E ->{
+                        switch (E.getCode()){
+                            case UP:secondPlayer.moveUp();break;
+                            case LEFT:secondPlayer.moveLeft();break;
+                            case RIGHT:secondPlayer.moveRight();break;
+                            case DOWN:secondPlayer.moveDown();break;
+                            case SPACE:secondPlayer.fire();break;
+                            case ESCAPE: primaryStage.close();break;
+                            default:break;
+                        }
+                    });
+                    try{
+                        ServerSocket serverSocket = new ServerSocket(723);
+                        new Thread(() -> {
+                            try {
+                                Socket socket = serverSocket.accept();
+                                inputFromClient = new DataInputStream(socket.getInputStream());
+                                outputStream = new DataOutputStream(socket.getOutputStream());
+                                InetAddress inetAddress = socket.getInetAddress();
+                                System.out.println(inetAddress.getHostAddress());
+                                System.out.println("Server started " + new Date());
+                                send();
+                                while(true){
+                                    x = inputFromClient.readInt();
+                                    Platform.runLater(() -> {
+                                        try{
+                                            switch (x){
+                                                case 0: player.moveRight();send();break;
+                                                case 1: player.moveLeft();send();break;
+                                                case 2: player.moveDown();send();break;
+                                                case 3: player.moveUp();send();break;
+                                                case 4: player.fire();send();break;
+                                            }
+                                        }
+                                        catch (IOException ex){
+                                            ex.printStackTrace();
+                                        }
+                                    });
+                                    send();
+                                }
+                            }
+                            catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }).start();
+                    }catch (IOException ex){
+                        ex.printStackTrace();
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                catch (InvalidMapException ex){
+                    ex.printStackTrace();
+                }
+            }
+        });
+        client_button_start.setOnAction(event -> {
+            try {
+                stage.close();
+                Socket socket = new Socket("localhost", 8000);
+                fromServer = new DataInputStream(socket.getInputStream());
+                toServer = new DataOutputStream(socket.getOutputStream());
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+            Scene scene = new Scene(new Pane());
+            scene.setOnKeyPressed(e -> {
+                try {
+                    switch (e.getCode()){
+                        case RIGHT: toServer.writeInt(0);break;
+                        case LEFT: toServer.writeInt(1);break;
+                        case DOWN: toServer.writeInt(2);break;
+                        case UP: toServer.writeInt(3);break;
+                        case SPACE:toServer.writeInt(4);break;
+                        default:break;
+                    }
+                }
+                catch (IOException ex){
+                    ex.printStackTrace();
+                }
+            });
+            stage.setScene(scene);
+            stage.show();
         });
     }
     public static void main(String[]args){

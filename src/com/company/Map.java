@@ -2,6 +2,9 @@ package com.company;
 
 import com.company.GUI.Barier.*;
 import com.company.GUI.Settings;
+import com.company.GUI.Tanks.GreenTank;
+import com.company.GUI.Tanks.RedTank;
+import com.company.GUI.Tanks.WhiteTank;
 import com.company.GUI.Tanks.YellowTank;
 import com.company.offlineTwoPlayers.SecondPlayer;
 import javafx.geometry.Insets;
@@ -20,11 +23,11 @@ public class Map implements Settings {
     private int[] currentPlaceOfTank = new int[2];
     private int[] currentPlaceOFTheAnotherTank = new int[2];
     private Barrier barrier1 = new Null();
-    private MyPlayer tank = new YellowTank();
+    private static MyPlayer tank = new YellowTank();
     private Barrier[] barrier = {new Null(), new Water(), new SteelWall(), new Trees(), new BrickWall()};
     private static Label labelOfTheHealthP = new Label();
     private static Label labelOfTheHealthQ = new Label();
-    private SecondPlayer another = new SecondPlayer();
+    private static SecondPlayer another = new SecondPlayer();
     private int attendance = 0;
     private int attendanceAnother = 0;
     private boolean Qdestroyed = false;
@@ -67,6 +70,8 @@ public class Map implements Settings {
                         mapUI.add(barrier[0].getBarrier(), x, y);
                     }
                     pane = new Pane(mapUI);
+                    pane.setStyle("-fx-background-color: #7F7F7FFF");
+                    pane.setPadding(new Insets(5, 5, 5, 5));
                 } else {
                     throw new InvalidMapException();
                 }
@@ -86,7 +91,17 @@ public class Map implements Settings {
         labelOfTheHealthQ.setText("Health of the Player2: " + health);
         labelOfTheHealthQ.setPadding(new Insets(20, 20, 20, 20));
     }
-
+    public static void setColorP(int i){
+        switch (i){
+            case 0:tank = new YellowTank();break;
+            case 1:tank = new RedTank();break;
+            case 2:tank = new GreenTank();break;
+            case 3:tank = new WhiteTank();break;
+        }
+    }
+    public static void setColorQ(int i){
+        another.setColor(i);
+    }
 
     public HBox Run(){
         HBox hBox = new HBox();
@@ -109,7 +124,8 @@ public class Map implements Settings {
     }
 
     public void setCurrentPosition(Position position) {
-        if(!Pdestroyed){
+        Position temp = new Position(currentPlaceOFTheAnotherTank[1], currentPlaceOFTheAnotherTank[0]);
+        if(!Pdestroyed && !position.equals(temp)){
             if(NxN[position.getY()][position.getX()] == 'T' && attendance == 1){
                 mapUI.add(barrier[3].getBarrier(), currentPlaceOfTank[1], currentPlaceOfTank[0]);
                 NxN[currentPlaceOfTank[0]][currentPlaceOfTank[1]] = 'T';
@@ -148,7 +164,8 @@ public class Map implements Settings {
         }
     }
     public void setCurrentPositionAnother(Position position) {
-        if(!Qdestroyed){
+        Position temp = new Position(currentPlaceOfTank[1], currentPlaceOfTank[0]);
+        if(!Qdestroyed && !position.equals(temp)){
             if(NxN[position.getY()][position.getX()] == 'T' &&  attendanceAnother  == 1){
                 mapUI.add(barrier[3].getBarrier(), currentPlaceOFTheAnotherTank[1], currentPlaceOFTheAnotherTank[0]);
                 NxN[currentPlaceOFTheAnotherTank[0]][currentPlaceOFTheAnotherTank[1]] = 'T';

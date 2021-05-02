@@ -4,7 +4,6 @@ import com.company.GUI.Bullet.Bullet;
 import com.company.GUI.Settings;
 import com.company.GUI.Tanks.CustomRectangle;
 import com.company.InvalidMapException;
-import com.company.Position;
 import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -31,6 +30,16 @@ public class SecondPlayer extends AnotherPlayers implements Settings {
         this.shadow = new CustomRectangle(this.shadowColor, getPixel());
     }
     public void setColor(int i){
+        Color [][]colors = {{new Color(.91, .91, .58, 1), new Color(.91, .61, .13, 1), new Color(.42, .42, 0, 1)},
+                {new Color(1, 1, 1, 1), new Color(.71, .19, .13, 1), new Color(.35, 0, .48, 1)},
+                {new Color(.71,.97,.81, 1), new Color(0,.55,.19, 1), new Color(0,.32,0, 1)},
+                {new Color(1,1,1, 1), new Color(.42,.42,.42, 1), new Color(0,.17,.20, 1)}};
+        this.mirrorColor = colors[i][0];
+        this.originalColor = colors[i][1];
+        this.shadowColor = colors[i][2];
+        this.mirror = new CustomRectangle(this.mirrorColor, getPixel());
+        this.original = new CustomRectangle(this.originalColor, getPixel());
+        this.shadow = new CustomRectangle(this.shadowColor, getPixel());
     }
 
 

@@ -53,7 +53,7 @@ public class Server extends Application {
             }
         });
         try{
-            ServerSocket serverSocket = new ServerSocket(8000);
+            ServerSocket serverSocket = new ServerSocket(723);
             new Thread(() -> {
                 try {
                     Socket socket = serverSocket.accept();
