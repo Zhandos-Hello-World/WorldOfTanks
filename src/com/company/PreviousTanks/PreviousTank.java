@@ -6,15 +6,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
-abstract public class Tank implements SettingsP {
+abstract public class PreviousTank implements SettingsP {
     protected Color mirrorColor = new Color(0, 0, 0, 1);
     protected Color originalColor = new Color(0, 0, 0, 1);
     protected Color shadowColor = new Color(0, 0, 0, 1);
     protected static Pane pane;
-    protected CustomRectangle mirror;
-    protected CustomRectangle original;
-    protected CustomRectangle shadow;
-    protected CustomRectangle black = new CustomRectangle(new Color(.13,.15,.17, 1), getPixel());
+    protected CustomRectanglePrevious mirror;
+    protected CustomRectanglePrevious original;
+    protected CustomRectanglePrevious shadow;
+    protected CustomRectanglePrevious black = new CustomRectanglePrevious(new Color(.13,.15,.17, 1), getPixel());
     public GridPane caterpillarLeft() {
         GridPane caterpillarLeft = new GridPane();
         caterpillarLeft.setStyle("-fx-background-color: black; -fx-color-label-visible: true");

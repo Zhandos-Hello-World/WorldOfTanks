@@ -48,8 +48,8 @@ public class Main extends Application {
     Label[] labels = {new Label("Player 1"), new Label("Player 2")};
     private static int choiceOfTheTank1 = 0;
     private static int choiceOfTheTank2 = 0;
-    Tank []tanks1 = {new YellowTankP(), new RedTankP(), new GreenTankP(), new WhiteTankP()};
-    Tank []tanks2 = {new YellowTankP(), new RedTankP(), new GreenTankP(), new WhiteTankP()};
+    PreviousTank[]tanks1 = {new YellowPreviousTankP(), new RedPreviousTankP(), new GreenPreviousTankP(), new WhitePreviousTankP()};
+    PreviousTank[]tanks2 = {new YellowPreviousTankP(), new RedPreviousTankP(), new GreenPreviousTankP(), new WhitePreviousTankP()};
     Label messageInvalid = new Label();
     private static boolean onlineOrOffline = false;
     //for Server
@@ -69,6 +69,8 @@ public class Main extends Application {
     private TextField portTextField;
     Label invalidPortNameMessage = new Label();
 
+    //for Single player
+    Button[][] buttonOfLevels = new Button[4][4];
 
     public void mainScreen(){
         Button[]buttonsQ = {play, settings, exit};
@@ -523,13 +525,8 @@ public class Main extends Application {
                 buttons.add(tanks2[choiceOfTheTank2].initializeOnTank(), 1, 1);
                 labels[1].setTextFill(colors[choiceOfTheTank2]);
             });
-
-
-
-
         });
     }
-
     //method of the server
     public void send() throws IOException{
         outputStream.writeInt(map.getSize());
@@ -546,7 +543,25 @@ public class Main extends Application {
         textOfLevel.setFont(Font.font("Calibri Light", FontWeight.BLACK, FontPosture.ITALIC, 30));
         textOfLevel.setTextFill(new Color(1, 1, 1, 1));
         VBox platform = new VBox();
-        Button[][] buttonOfLevels = new Button[4][4];
+        for(int i  = 0; i < 4; i++){
+            for(int j = 0; j < 4; j++){
+                levels.add(buttonOfLevels[i][j], j, i);
+            }
+        }
+
+
+        Button cancel = new Button("<-");
+        cancel.getStylesheets().add("buttonsDesign.css");
+        cancel.setMinSize(100, 100);
+        levels.add(cancel, 0, 4);
+
+        platform.getChildren().addAll(textOfLevel, levels);
+        platform.setPadding(new Insets(100, 0, 0, 200));
+        Pane.setCenter(platform);
+        cancel.setOnAction(E -> choicesButtons());
+    }
+    public void initializeLevels(){
+        buttonOfLevels = new Button[4][4];
         int index = 1;
         for(int i = 0; i < 4; i++){
             for(int j = 0; j < 4; j++){
@@ -559,21 +574,10 @@ public class Main extends Application {
                 buttonOfLevels[i][j].getStylesheets().add("buttonsDesign.css");
                 buttonOfLevels[i][j].setMinSize(100, 100);
                 index++;
-                levels.add(buttonOfLevels[i][j], j, i);
             }
         }
-        Button cancel = new Button("<-");
-        cancel.getStylesheets().add("buttonsDesign.css");
-        cancel.setMinSize(100, 100);
-        levels.add(cancel, 0, 4);
-
-        platform.getChildren().addAll(textOfLevel, levels);
-        platform.setPadding(new Insets(100, 0, 0, 200));
-        Pane.setCenter(platform);
-        cancel.setOnAction(E ->{
-            choicesButtons();
-        });
     }
+
 
     public void installButtons(Button[]Anybuttons){
         buttons.getChildren().clear();
@@ -601,21 +605,52 @@ public class Main extends Application {
         stage.show();
 
 
-        play.setOnAction(E -> {
-            choicesButtons();
-        });
-        cancel.setOnAction(E -> {
-            mainScreen();
-        });
-
+        play.setOnAction(E -> choicesButtons());
+        cancel.setOnAction(E -> mainScreen());
         settings.setOnAction(E->{
-
         });
-
-        exit.setOnAction(E -> {
-            System.exit(1);
-        });
-
+        exit.setOnAction(E -> System.exit(1));
+        initializeLevels();
+            buttonOfLevels[0][0].setOnAction(event -> {
+                try {
+                    file = new File("src\\com\\company\\Level\\Level1.txt");
+                    Map.setColorP(2);
+                    Map.setColorQ(3);
+                    stage.close();
+                    Stage primaryStage = new Stage();
+                    GridPane gp = new GridPane();
+                    Scanner scanner = new Scanner(file);
+                    Map map = new Map(scanner, gp);
+                    Game game = new Game(map);
+                    Player player = new GreenTank();
+                    BotPlayer bot = new BotPlayer();
+                    game.addPlayer(player);
+                    game.addPlayer(bot);
+                    HBox hBox = map.Run();
+                    Scene scene = new Scene(hBox);
+                    primaryStage.setScene(scene);
+                    primaryStage.setResizable(false);
+                    primaryStage.show();
+                    scene.setOnKeyPressed(E ->{
+                        switch (E.getCode()){
+                            case RIGHT:player.moveRight();break;
+                            case LEFT:player.moveLeft();break;
+                            case DOWN:player.moveDown();break;
+                            case UP:player.moveUp();break;
+                            case SHIFT:player.fire();break;
+                            case ESCAPE: primaryStage.close();break;
+                            default:break;
+                        }
+                    });
+                    bot.start();
+                }
+                catch (InvalidMapException e) {
+                    e.printStackTrace();
+                }
+                catch(FileNotFoundException e){
+                    e.printStackTrace();
+                }
+            });
 
         startOfFlineMultiplayer.setOnAction(e -> {
             Map.setColorP(choiceOfTheTank1);
@@ -687,6 +722,7 @@ public class Main extends Application {
                     Stage primaryStage = new Stage();
                     Player []myPlayer = {new YellowTank(), new RedTank(),  new GreenTank(),  new WhiteTank()};
                     map = new Map(scanner, gp);
+                    map.setPort(serverPort);
                     Game game = new Game(map);
                     Player player = myPlayer[choiceOfTheTank1];
                     SecondPlayer secondPlayer = new SecondPlayer();
@@ -835,11 +871,9 @@ class PreviousMap{
     private int size(){
         return Map.length;
     }
-
     public GridPane getMapGUI(){
         return mapGUI;
     }
-
 }
 class ExceptionWithShow extends Exception{
     String message = "Wrong input in file";

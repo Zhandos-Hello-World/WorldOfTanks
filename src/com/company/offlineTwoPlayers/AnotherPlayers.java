@@ -90,7 +90,6 @@ public class AnotherPlayers {
     public void moveUp() {
         setMap(map);
         repoint();
-        System.out.println("player");
         map.print();
         System.out.println();
         if(!(-1 == y - 1) && (NxN[y - 1][x] == '0' || NxN[y - 1][x] == 'T')) {

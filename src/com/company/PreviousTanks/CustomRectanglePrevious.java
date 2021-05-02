@@ -4,14 +4,14 @@ package com.company.PreviousTanks;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class CustomRectangle implements SettingsP {
+public class CustomRectanglePrevious implements SettingsP {
     private Rectangle[]rectangles = new Rectangle[20];
     private int index;
     private Color color;
     private int pixelSize;
 
 
-    public CustomRectangle(Color color, int pixelSize){
+    public CustomRectanglePrevious(Color color, int pixelSize){
         this.color = color;
         this.pixelSize = pixelSize;
         for(int i = 0; i < rectangles.length; i++){

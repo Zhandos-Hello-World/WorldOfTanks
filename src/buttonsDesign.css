@@ -8,3 +8,6 @@
 .button:hover{
     -fx-background-color: #C3534FFF;
 }
+.button:pressed{
+    -fx-background-color: #9B302EFF;
+}
